@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="en" class="static">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KEVIN: stop working out of chat windows</title>
+<meta name="description" content="KEVIN is a custom AI system set up around your business: file-based memory, agents on Claude and GPT, and hooks that hold customer messages for your yes.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#07080B">
+<meta name="color-scheme" content="dark">
+<style>
+@font-face{font-family:Archivo;src:url(fonts/Archivo-var.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+@font-face{font-family:Mono;src:url(fonts/jetbrains-mono.woff2) format('woff2');font-weight:400;font-display:swap}
+
+:root{
+  --bg:#07080B; --bg-2:#0D0F14; --bg-3:#14171E; --text:#EDEEF2; --text-2:#A3A8B6; --text-3:#8A90A3;
+  --line:#22252D; --line-2:#33373F; --accent:#FFD23F; --app:#0E1014;
+  --wrap:1320px; --gut:clamp(20px,4vw,56px); --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:80px;background:var(--bg)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--bg);color:var(--text);font:400 18px/1.55 Archivo,system-ui,sans-serif;font-stretch:100%;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:90;background:url(media/grain.png);opacity:.055;mix-blend-mode:overlay}
+@media (max-width:900px),(pointer:coarse){body::after{display:none}.nav.solid{-webkit-backdrop-filter:none;backdrop-filter:none;background:#07080B}}
+::selection{background:var(--accent);color:#07080B}
+img,video{display:block;max-width:100%}
+a{color:inherit;text-underline-offset:.2em;text-decoration-thickness:1px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+html{scrollbar-color:#2A2E37 var(--bg)}
+.skip{position:absolute;left:-999px;top:10px;background:var(--accent);color:#07080B;padding:10px 14px;z-index:100}
+.skip:focus{left:10px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mono{font-family:Mono,ui-monospace,Consolas,monospace}
+
+.display{font-stretch:112%;font-weight:640;letter-spacing:-.032em;line-height:.98;text-wrap:balance}
+h2.display{font-size:clamp(38px,5vw,72px)}
+h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spacing:-.022em;line-height:1.12}
+.lead{font-size:clamp(18px,1.5vw,21px);line-height:1.5;color:var(--text-2);max-width:34em}
+.y{color:var(--accent)}
+
+.btn{display:inline-flex;align-items:center;gap:12px;height:52px;padding:0 24px;font:620 16px/1 Archivo;font-stretch:104%;text-decoration:none;border:1px solid var(--text);transition:background-color .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease),transform .12s var(--ease)}
+.btn:active{transform:translateY(1px)}
+.btn-solid{background:var(--text);color:var(--bg)}
+.btn-solid:hover{background:var(--accent);border-color:var(--accent)}
+.btn-line{background:transparent;color:var(--text);border-color:var(--line-2)}
+.btn-line:hover{border-color:var(--text)}
+.btn svg{width:16px;height:16px;flex:none;transition:transform .35s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background-color .4s var(--ease)}
+.nav.solid{background:rgba(7,8,11,.86);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 1px 0 var(--line)}
+.nav .wrap{height:68px;display:flex;align-items:center;justify-content:space-between}
+.word{font-stretch:125%;font-weight:800;font-size:20px;letter-spacing:.06em;text-decoration:none}
+.nav ul{list-style:none;display:flex;align-items:center;gap:30px}
+.nav li a:not(.btn){font-size:15px;color:var(--text-2);text-decoration:none}
+.nav li a:not(.btn):hover{color:var(--text)}
+.nav .btn{height:40px;padding:0 16px;font-size:15px}
+
+/* ===== INTRO: the cinematic story ===== */
+#intro{position:relative;height:850vh}
+.scene{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;place-items:center}
+.beat{position:absolute;left:0;right:0;padding:0 var(--gut);text-align:center;will-change:transform,opacity}
+.q1{font-stretch:114%;font-weight:680;font-size:clamp(46px,8.4vw,150px);letter-spacing:-.04em;line-height:.95;max-width:15ch;margin:0 auto}
+.q1 .w{display:inline-block}
+.b2{font-stretch:118%;font-weight:820;font-size:clamp(52px,10vw,200px);letter-spacing:-.045em;line-height:.9;opacity:0}
+.b2 .c{display:inline-block}
+.b2 .wd{display:inline-block;white-space:nowrap}
+.jk{top:calc(50% - clamp(120px,15vw,210px));font:400 clamp(16px,1.4vw,20px)/1 Mono,monospace;color:var(--accent);letter-spacing:.14em;opacity:0}
+.b3{font-stretch:108%;font-weight:560;font-size:clamp(30px,4.6vw,78px);letter-spacing:-.03em;line-height:1.06;max-width:20ch;margin:0 auto;opacity:0}
+.b3 .w{opacity:.12}
+.chatwrap{opacity:0;width:min(520px,86vw);height:min(560px,58vh);position:relative;margin-top:70px}
+.cap{position:absolute;left:0;right:0;top:calc(50% - min(280px,29vh) - 40px);text-align:center;font-stretch:110%;font-weight:620;font-size:clamp(24px,3vw,44px);letter-spacing:-.025em;opacity:0;padding:0 var(--gut)}
+.chat{position:absolute;inset:0;background:#F4F4F6;color:#1B1C20;border-radius:22px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.9);font:400 15px/1.45 system-ui,-apple-system,'Segoe UI',sans-serif;text-align:left}
+.chat-top{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #E1E2E6;background:#FBFBFC;font-weight:600;font-size:15px;position:relative;z-index:2}
+.ctx{font:500 12px/1 system-ui,sans-serif;color:#6B6E78}
+.ctx b{font-weight:700;color:#1B1C20}
+.ctx.hot b{color:#D93A2B}
+.msgs{position:absolute;left:0;right:0;top:54px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.m{max-width:80%;padding:11px 15px;border-radius:18px;background:#fff;box-shadow:0 1px 0 #E1E2E6}
+.m.u{align-self:flex-end;background:#2F6BFF;color:#fff;box-shadow:none}
+.chat-in{position:absolute;left:14px;right:14px;bottom:14px;height:48px;border-radius:24px;background:#fff;border:1px solid #E1E2E6;display:flex;align-items:center;padding:0 18px;color:#9A9DA6;z-index:2}
+.chat.two{transform:translateX(130%);opacity:0;display:flex;flex-direction:column}
+.chat.two .empty{flex:1;display:grid;place-items:center;font-size:22px;font-weight:600;color:#1B1C20}
+.flag{position:absolute;right:-14px;top:70px;z-index:3;background:#D93A2B;color:#fff;font:700 12px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:9px 12px;opacity:0;transform:rotate(3deg)}
+.b5{font-stretch:114%;font-weight:700;font-size:clamp(44px,8vw,140px);letter-spacing:-.04em;line-height:.95}
+.b5 .ln{display:block;overflow:hidden;padding-bottom:.05em}
+.b5 .ln>span{display:block;transform:translateY(105%)}
+.b6{font-stretch:110%;font-weight:600;font-size:clamp(28px,4.2vw,68px);letter-spacing:-.03em;line-height:1.1}
+.b6 span{display:block;opacity:0}
+.built{font:400 clamp(15px,1.3vw,19px)/1 Mono,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--text-2);top:calc(50% - clamp(90px,14vw,250px));opacity:0}
+.kevin{white-space:nowrap;font-stretch:125%;font-weight:860;font-size:clamp(76px,21vw,380px);letter-spacing:-.02em;line-height:.8;opacity:0;color:var(--text)}
+.kevin .c{display:inline-block}
+.reveal{position:absolute;width:min(100vw,177.78vh);aspect-ratio:16/9;background:var(--app);transform:scale(.12);opacity:0;overflow:hidden}
+.reveal img,.reveal video{width:100%;height:100%;object-fit:cover}
+.hint{position:absolute;bottom:28px;left:0;right:0;text-align:center;font:400 12px/1 Mono,monospace;letter-spacing:.24em;color:var(--text-3);text-transform:uppercase}
+.hint i{display:block;width:1px;height:34px;background:var(--text-3);margin:12px auto 0;animation:drip 2.2s var(--ease) infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+.static #intro{height:auto}
+.static .scene{position:relative;height:auto;display:block;padding:140px 0 60px}
+.static .beat,.static .cap,.static .chatwrap{position:relative;opacity:1!important;transform:none!important;margin:0 auto 64px;top:auto}
+.static .b3 .w,.static .b6 span{opacity:1}
+.static .b5 .ln>span{transform:none}
+.static .chat.two,.static .flag,.static .hint,.static .cap{display:none}
+.static .reveal{position:relative;opacity:1;transform:none;margin:0 auto}
+.static .track{flex-direction:column;width:auto;transform:none!important}
+.static .case{width:auto}
+.static .who-pin{min-height:0}
+.static .sc .pop,.static .sc .tag,.static .sc .dim{display:none}
+
+
+/* ===== ANATOMY: the exploded 3D view ===== */
+#anatomy{position:relative;height:440vh;background:var(--bg)}
+.anat-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+#anat{position:absolute;inset:0;width:100%;height:100%;display:block}
+.anat-intro{position:absolute;left:0;right:0;bottom:34px;text-align:center;font:400 13px/1 Mono,monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--text-2)}
+.alabels{list-style:none;position:absolute;left:var(--gut);bottom:clamp(40px,8vh,90px);width:min(460px,86vw);pointer-events:none}
+.alabel{position:absolute;left:0;bottom:0;opacity:0;transform:translateY(24px);transition:opacity .6s var(--ease),transform .8s var(--ease)}
+.alabel.on{opacity:1;transform:none}
+.alabel .n{font:400 14px/1 Mono,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.alabel h3{font-size:clamp(28px,3.2vw,46px);margin-top:14px;letter-spacing:-.03em}
+.alabel p{color:var(--text-2);margin-top:12px;font-size:17px;max-width:30em}
+.anat-static #anatomy,.static #anatomy{height:auto;padding:100px 0}
+.anat-static .anat-stage,.static .anat-stage{position:relative;height:auto}
+.anat-static #anat,.anat-static .anat-intro,.static .anat-intro{display:none}
+.anat-static .alabels,.static .alabels{position:relative;left:auto;bottom:auto;margin:0 auto;padding:0 var(--gut);width:auto;max-width:900px}
+.anat-static .alabel,.static .alabel{position:relative;opacity:1;transform:none;margin-bottom:48px}
+@media (max-width:700px){.alabels{bottom:28px}.alabel p{font-size:15px}}
+
+
+
+/* ===== SCREENS: real interfaces, one at a time, parts lifted out ===== */
+#screens{position:relative;height:560vh;background:var(--bg)}
+.sc-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;grid-template-rows:auto 1fr auto;padding:84px var(--gut) 22px;gap:18px}
+.sc-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.sc-prod{font-stretch:114%;font-weight:680;font-size:clamp(28px,3.4vw,52px);letter-spacing:-.035em;line-height:1}
+.sc-skin{font:400 13px/1 Mono,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.sc-count{margin-left:auto;font:400 13px/1 Mono,monospace;color:var(--text-3);font-variant-numeric:tabular-nums}
+.sc-deck{position:relative;display:grid;place-items:center;min-height:0}
+.sc{position:absolute;margin:0;width:min(100%,calc((100vh - 200px) * 16 / 9));aspect-ratio:16/9;box-shadow:0 0 0 1px var(--line-2),0 60px 120px -50px rgba(0,0,0,.95);background:var(--app);opacity:0;transform-style:preserve-3d;will-change:transform,opacity}
+.sc:first-child{opacity:1}
+.sc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sc .dim{position:absolute;inset:0;background:#05060A;opacity:0}
+.sc .pop{position:absolute;z-index:2;opacity:0;transform-origin:50% 50%;box-shadow:0 30px 60px -20px rgba(0,0,0,.9)}
+.sc .pop::after{content:'';position:absolute;inset:-3px;border:2px solid var(--accent);pointer-events:none}
+.sc .lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.sc .lines .r{fill:none;stroke:var(--accent);stroke-width:.25;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1}
+.sc .lines .r{stroke-width:2}
+.sc .tag{position:absolute;left:50%;bottom:-14px;translate:-50% 100%;translate:-50% 0;z-index:3;opacity:0;transform:translateY(8px);background:var(--accent);color:#07080B;font:700 clamp(12px,1vw,15px)/1.2 Archivo;font-stretch:104%;padding:9px 12px;white-space:nowrap;box-shadow:0 12px 30px -10px rgba(0,0,0,.8)}
+.sc-note{font:400 12px/1 Mono,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);text-align:right}
+.static #screens{height:auto}
+.static .sc-stage{position:relative;height:auto;display:block}
+.static .sc-deck{display:block}
+.static .sc{position:relative;opacity:1;margin:0 auto 40px;width:100%}
+@media (max-width:700px){.sc-stage{padding-top:76px}.sc .tag{white-space:normal;max-width:60vw;font-size:11px;padding:6px 8px}}
+
+/* ===== STYLES: pick a real interface ===== */
+.styles{padding:clamp(100px,12vw,170px) 0;background:var(--bg-2)}
+.styles-head{display:flex;justify-content:space-between;align-items:end;gap:32px;flex-wrap:wrap;margin-bottom:clamp(32px,4vw,52px)}
+.styles-head h2{max-width:13ch}
+.styles-head .lead{max-width:28em}
+.style-tabs{display:flex;gap:0;border-top:1px solid var(--line-2);margin-bottom:24px;overflow-x:auto}
+.style-tabs button{all:unset;cursor:pointer;padding:18px 28px 18px 0;margin-right:28px;font:620 19px/1.2 Archivo;font-stretch:106%;color:var(--text-3);box-shadow:inset 0 2px 0 transparent;transition:color .25s,box-shadow .25s;white-space:nowrap}
+.style-tabs button small{display:block;font:400 13px/1 Mono,monospace;letter-spacing:.1em;text-transform:uppercase;margin-top:8px;color:var(--text-3)}
+.style-tabs button:hover{color:var(--text-2)}
+.style-tabs button[aria-selected=true]{color:var(--text);box-shadow:inset 0 2px 0 var(--accent)}
+.style-tabs button[aria-selected=true] small{color:var(--accent)}
+.style-tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.style-frame{position:relative;aspect-ratio:16/9;background:var(--app);box-shadow:0 0 0 1px var(--line),0 50px 100px -50px rgba(0,0,0,.9);overflow:hidden}
+.style-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .35s var(--ease)}
+@media (max-width:700px){.tlabel{padding:16px 18px}.tlabel p{font-size:14px}.tour-frame{width:96vw}}
+
+
+.themes{margin-top:clamp(40px,5vw,64px)}
+.themes-k{font:600 17px/1 Archivo;font-stretch:106%;margin-bottom:18px}
+.theme-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.theme-row figure{margin:0}
+.theme-row img{width:100%;aspect-ratio:16/9;object-fit:cover;box-shadow:0 0 0 1px var(--line);transition:transform .5s var(--ease)}
+.theme-row figure:hover img{transform:translateY(-4px)}
+.theme-row figcaption{font-size:14px;color:var(--text-2);margin-top:8px}
+@media (max-width:900px){.theme-row{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+
+/* ===== THEMES: one cockpit, seven looks ===== */
+#themes.light .th-copy h2,#themes.light .sw.on b{color:#16181D}
+#themes.light .th-copy .lead,#themes.light .sw b{color:#4A4F5C}
+#themes.light .sw small{color:#5E6372}
+#themes.light .sw.on button{background:rgba(0,0,0,.05)}
+#themes.light .sw .chips{box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+
+#themes{position:relative;height:420vh;background:var(--bg);transition:background-color .6s var(--ease)}
+#themes h2,#themes .lead,#themes b{transition:color .4s var(--ease)}
+.th-stage{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(300px,.36fr) 1fr;gap:clamp(28px,3vw,56px);align-items:center;padding:80px var(--gut) 40px}
+.th-copy h2{font-size:clamp(38px,4.4vw,68px)}
+.th-copy .lead{margin-top:16px;font-size:17px}
+.swatches{list-style:none;margin-top:28px;display:grid;gap:6px}
+.sw button{all:unset;cursor:pointer;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:16px;align-items:center;width:100%;padding:9px 12px;box-sizing:border-box;box-shadow:inset 2px 0 0 transparent;transition:background-color .3s,box-shadow .3s}
+.sw button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sw .chips{grid-row:span 2;display:flex;box-shadow:0 0 0 1px rgba(255,255,255,.14)}
+.sw .chips i{width:20px;height:34px;display:block}
+.sw b{font-weight:640;font-stretch:108%;font-size:17px;color:var(--text-2);transition:color .3s}
+.sw small{font-size:13px;color:var(--text-3)}
+.sw.on button{background:rgba(255,255,255,.05);box-shadow:inset 3px 0 0 var(--ac)}
+.sw.on b{color:var(--text)}
+.th-frame{position:relative;aspect-ratio:16/9;width:100%;max-height:78vh;justify-self:center;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 60px 120px -40px rgba(0,0,0,.95);overflow:hidden;background:#000}
+.th-frame .tl{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:circle(0% at 0% 50%)}
+.th-frame .tl:first-child{clip-path:circle(150% at 0% 50%)}
+.th-name{position:absolute;right:18px;bottom:16px;font:400 12px/1 Mono,monospace;letter-spacing:.18em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);padding:8px 10px}
+.static #themes{height:auto}
+.static .th-stage{position:relative;height:auto}
+.static .th-frame .tl:first-child{clip-path:none}
+@media (max-width:1020px){
+  .th-stage{grid-template-columns:1fr;align-content:center;gap:18px;padding-top:76px}
+  .swatches{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:16px;gap:4px}
+  .sw button{grid-template-columns:1fr;padding:6px}
+  .sw .chips{grid-row:auto}.sw .chips i{flex:1;height:18px;width:auto}
+  .sw small{display:none}.sw b{font-size:13px;margin-top:6px}
+  .th-copy .lead{display:none}
+}
+
+/* ===== after the intro ===== */
+.what{padding:clamp(110px,13vw,190px) 0 clamp(80px,9vw,130px)}
+.what h2{font-size:clamp(40px,5.6vw,86px);max-width:15ch}
+.what-row{display:flex;justify-content:space-between;align-items:flex-end;gap:32px 64px;flex-wrap:wrap;margin-top:36px}
+.what .lead{max-width:31em}
+.ctas{display:flex;gap:12px;flex-wrap:wrap}
+.facts{list-style:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:clamp(56px,7vw,96px);border-top:1px solid var(--line-2)}
+.facts li{padding:18px 18px 0 0}
+.facts b{display:block;font-weight:620;font-stretch:106%;font-size:17px}
+.facts span{display:block;font-size:15px;color:var(--text-3);margin-top:4px}
+
+.film{position:relative;background:var(--app);aspect-ratio:16/9;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+.film video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fcap{display:flex;justify-content:space-between;gap:16px;margin-top:14px;font-size:14px;color:var(--text-3)}
+
+.story{padding:clamp(90px,11vw,160px) 0 clamp(50px,7vw,100px);background:var(--bg-2)}
+.story-head{max-width:820px;margin-bottom:clamp(40px,5vw,80px)}
+.story-head p{margin-top:20px}
+.story-grid{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:clamp(32px,5vw,80px)}
+.steps{list-style:none}
+.step{min-height:80vh;display:flex;flex-direction:column;justify-content:center;padding:40px 0;transition:opacity .5s var(--ease)}
+.js .step{opacity:.25}
+.js .step.on{opacity:1}
+.step p{color:var(--text-2);margin-top:16px;max-width:30em}
+.step ul{list-style:none;margin-top:26px;font-size:16px;max-width:30em;border-top:1px solid var(--line)}
+.step li{padding:10px 0;border-bottom:1px solid var(--line)}
+.step .film{display:none;margin-top:28px}
+.stage{position:sticky;top:calc(50vh - 22vw * .5625 - 30px);align-self:start}
+.stage .film video{opacity:0;transition:opacity .6s var(--ease)}
+.stage .film video.on{opacity:1}
+.stage .fcap span:last-child{font-variant-numeric:tabular-nums}
+
+.who{position:relative;background:var(--bg)}
+.who-pin{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:90px 0 60px}
+.who-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(28px,4vw,48px)}
+.track{display:flex;gap:24px;padding:0 var(--gut);width:max-content}
+.case{width:min(560px,82vw);flex:none;background:var(--bg-3);box-shadow:0 0 0 1px var(--line);padding:32px 32px 30px;display:flex;flex-direction:column}
+.case .k{font:400 13px/1 Mono,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.case h3{margin-top:14px}
+.case p{color:var(--text-2);margin-top:12px;font-size:17px}
+.case .tree{margin-top:auto;padding-top:20px;font:400 13px/1.75 Mono,monospace;color:var(--text-2);white-space:pre;border-top:1px solid var(--line);overflow-x:auto}
+.case p+.tree{margin-top:24px}
+.tree b{font-weight:400;color:var(--text)}
+.tree i{font-style:normal;color:var(--accent)}
+
+.market{padding:clamp(100px,12vw,170px) 0;background:var(--bg-2)}
+.market-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(32px,5vw,80px);align-items:start}
+.jobs{border-top:1px solid var(--line-2)}
+.jobs>div{display:grid;grid-template-columns:170px 1fr auto;gap:20px;align-items:baseline;padding:20px 0;border-bottom:1px solid var(--line)}
+.jobs dt{font-weight:620;font-stretch:106%}
+.jobs dd{color:var(--text-2)}
+.tag{font-size:13px;font-weight:600;color:var(--text-3);white-space:nowrap}
+.tag.held{color:var(--accent)}
+
+.files{padding:clamp(100px,12vw,170px) 0}
+.files-head{display:flex;justify-content:space-between;align-items:end;gap:32px;flex-wrap:wrap;margin-bottom:clamp(36px,4vw,56px)}
+.files-head .lead{max-width:30em}
+.ide{background:var(--app);box-shadow:0 0 0 1px var(--line),0 40px 80px -40px rgba(0,0,0,.9)}
+.ide-tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--line)}
+.ide-tabs button{all:unset;cursor:pointer;font:400 14px/1 Mono,monospace;color:#8B90A0;padding:16px 22px;border-right:1px solid #1C2028;white-space:nowrap;transition:color .2s,background-color .2s}
+.ide-tabs button:hover{color:#E8EAEF}
+.ide-tabs button[aria-selected=true]{color:#fff;background:#16191F;box-shadow:inset 0 -2px 0 var(--accent)}
+.ide-tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.ide-body{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:420px}
+.ide-note{border-right:1px solid var(--line);padding:28px;font-size:16px;line-height:1.55;color:var(--text-2)}
+.ide-note b{display:block;color:#fff;font-weight:620;font-size:19px;margin-bottom:8px;font-stretch:106%}
+.code{margin:0;padding:28px 32px;overflow-x:auto;font:400 14.5px/1.75 Mono,monospace;color:#D6D9E2;tab-size:2}
+.code code{font:inherit}
+.code[hidden]{display:none}
+.code .h{color:#fff}.code .k{color:#8C9BFF}.code .s{color:var(--accent)}.code .c{color:#8A90A3}
+
+.lib{padding:0 0 clamp(100px,12vw,170px)}
+.lib-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(32px,5vw,80px)}
+.shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line-2)}
+.shelf>div{padding:20px 16px 0 0}
+.shelf h3{font-size:20px}
+.shelf .mono{font-size:14px;line-height:1.9;color:var(--text-2);margin-top:12px}
+
+.here{padding:clamp(100px,12vw,170px) 0;background:var(--accent);color:#07080B}
+.here-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(32px,5vw,80px);align-items:end}
+.here h2{font-size:clamp(44px,6.4vw,104px)}
+.here p{font-size:clamp(18px,1.5vw,21px);line-height:1.5;color:#2A2B30}
+.here p+p{margin-top:16px}
+
+.pricing{padding:clamp(100px,12vw,170px) 0;background:var(--bg-2)}
+.ptable{width:100%;border-collapse:collapse;margin-top:clamp(40px,5vw,64px);font-size:16px}
+.ptable th,.ptable td{text-align:left;padding:16px 20px 16px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.ptable thead th{border-bottom:1px solid var(--text);padding-bottom:28px;vertical-align:bottom}
+.ptable tbody th{font-weight:400;color:var(--text-2);width:34%}
+.ptable td{width:33%;font-variant-numeric:tabular-nums}
+.plan{font-stretch:108%;font-weight:620;font-size:22px;letter-spacing:-.02em}
+.price{display:block;font-stretch:112%;font-weight:640;font-size:clamp(44px,4.6vw,64px);letter-spacing:-.035em;line-height:1;margin:14px 0 6px}
+.when{display:block;font-size:15px;color:var(--text-2);font-weight:400;margin-bottom:22px}
+.dash{color:var(--text-3)}
+.care{display:grid;grid-template-columns:minmax(0,.34fr) minmax(0,1fr) auto;gap:24px;align-items:center;margin-top:40px;padding:28px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.care b{font-stretch:108%;font-weight:620;font-size:22px}
+.care p{color:var(--text-2)}
+.care .amt{font-stretch:112%;font-weight:640;font-size:34px;letter-spacing:-.03em;white-space:nowrap}
+.care .amt small{font-size:15px;font-weight:400;color:var(--text-2);margin-left:4px;letter-spacing:0}
+.pnote{margin-top:22px;font-size:15px;color:var(--text-3)}
+
+.build{padding:clamp(100px,12vw,170px) 0}
+.build ol{list-style:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:clamp(40px,5vw,64px);border-top:1px solid var(--line-2)}
+.build li{padding:24px 24px 0 0}
+.build .wk{font-size:14px;color:var(--text-3)}
+.build h3{font-size:22px;margin:8px 0}
+.build p{font-size:16px;color:var(--text-2)}
+
+.founder{padding:clamp(90px,11vw,150px) 0;background:var(--bg-2)}
+.founder .wrap{display:grid;grid-template-columns:200px minmax(0,1fr);gap:clamp(28px,4vw,56px);align-items:start;max-width:1040px}
+.founder img{width:200px;height:250px;object-fit:cover;object-position:center 28%;filter:grayscale(1) contrast(1.05)}
+.founder blockquote{font-stretch:106%;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.25;letter-spacing:-.02em;text-wrap:pretty}
+.founder cite{display:block;margin-top:22px;font-style:normal;font-size:16px;color:var(--text-3)}
+.faq{padding:clamp(100px,12vw,170px) 0}
+.faq .wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(32px,5vw,80px)}
+.faq-list{border-top:1px solid var(--line-2)}
+details{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:22px 0;font-weight:600;font-size:19px;font-stretch:104%}
+summary::-webkit-details-marker{display:none}
+summary svg{width:16px;height:16px;flex:none;transition:transform .35s var(--ease)}
+details[open] summary svg{transform:rotate(45deg)}
+details p{color:var(--text-2);padding:0 48px 24px 0}
+.final{padding:clamp(120px,14vw,220px) 0;text-align:center;border-top:1px solid var(--line)}
+.final h2{font-size:clamp(48px,8vw,140px);margin:0 auto;max-width:12ch}
+.final .ctas{justify-content:center;margin-top:44px}
+footer{padding:28px 0;font-size:14px;color:var(--text-3);border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:1020px){
+  .story-grid,.market-grid,.lib-grid,.here-grid,.faq .wrap{grid-template-columns:1fr}
+  .stage{display:none}
+  .js .step{opacity:1}
+  .step{min-height:0;padding:0 0 64px}
+  .step .film{display:block}
+  .facts{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:20px}
+  .ide-body{grid-template-columns:1fr}
+  .ide-note{border-right:0;border-bottom:1px solid var(--line)}
+  .build ol{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:32px}
+}
+@media (max-width:700px){
+  .nav ul li:not(:last-child){display:none}
+  .facts{grid-template-columns:1fr 1fr}
+  .jobs>div{grid-template-columns:1fr;gap:4px}
+  .shelf{grid-template-columns:1fr 1fr;row-gap:16px}
+  .code{font-size:12.5px;padding:20px}
+  .build ol{grid-template-columns:1fr}
+  .track{flex-direction:column;width:auto}
+  .case{width:auto}
+  .ptable{table-layout:fixed}
+  .ptable th,.ptable td{padding-right:10px;font-size:15px}
+  .ptable .price{font-size:34px}
+  .ptable .btn{height:44px;padding:0 10px;font-size:14px;width:100%;justify-content:center}
+  .ptable thead th:first-child{width:30%}
+  .care{grid-template-columns:1fr}
+  .founder .wrap{grid-template-columns:1fr}
+  .founder img{width:140px;height:175px}
+  .case .tree{font-size:11.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="word" href="#top" aria-label="KEVIN home">KEVIN</a>
+    <nav aria-label="Main"><ul>
+      <li><a href="#anatomy">Product</a></li>
+      <li><a href="#themes">Themes</a></li>
+      <li><a href="#who">Who it's for</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a class="btn btn-line" href="mailto:amaisao48@gmail.com?subject=KEVIN%20build">Book a build</a></li>
+    </ul></nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section id="intro" aria-label="Why KEVIN exists">
+  <div class="scene" id="top">
+    <h1 class="beat q1" id="q1">Are you still working out of chat windows?</h1>
+    <p class="beat b2">You're behind.</p>
+    <p class="beat b3">Using AI from chat windows in the big 26 is what boomers are doing now.</p>
+
+    <p class="cap c1">Chat windows get bloated.</p>
+    <p class="cap c2">Then they start making things up.</p>
+    <p class="cap c3">And none of your work carries over.</p>
+    <div class="chatwrap" aria-hidden="true">
+      <div class="chat one">
+        <div class="chat-top"><span>New chat</span><span class="ctx">Context <b id="ctxn">12%</b></span></div>
+        <div class="msgs" id="msgs">
+          <div class="m u">Write a follow-up to the Henderson lead</div>
+          <div class="m">Of course! Here's a friendly follow-up you can send to Henderson...</div>
+          <div class="m u">Use the price we agreed on earlier</div>
+          <div class="m">Which price are you referring to?</div>
+          <div class="m u">The one I gave you an hour ago</div>
+          <div class="m">I'm sorry, I don't see a price earlier in our conversation.</div>
+          <div class="m u">Pasting the price sheet again...</div>
+          <div class="m">Thanks! Based on this sheet, the total would be $4,250.</div>
+          <div class="m u">That's wrong. It's $3,180.</div>
+          <div class="m">You're absolutely right, I apologize. $3,180.</div>
+          <div class="m u">Now write the invoice reminder for Brennan</div>
+          <div class="m">Sure! Who is Brennan?</div>
+          <div class="m u">I told you this morning</div>
+          <div class="m scr">Brennan is a valued client since 2019 who prefers Tuesday deliveries.</div>
+          <div class="m scr">His invoice of $8,400 is due on February 31st.</div>
+          <div class="m scr">I've also emailed him for you.</div>
+        </div>
+        <div class="chat-in">Message the chat...</div>
+      </div>
+      <div class="flag">Hallucinating</div>
+      <div class="chat two">
+        <div class="chat-top"><span>New chat</span><span class="ctx">Context <b>0%</b></span></div>
+        <div class="empty">How can I help you today?</div>
+        <div class="chat-in">Message the chat...</div>
+      </div>
+    </div>
+
+    <p class="beat b5"><span class="ln"><span>Chat windows are a demo.</span></span><span class="ln"><span class="y">Not the real product.</span></span></p>
+    <p class="beat b6"><span>No native way to control your PC.</span><span>No way to do the work for you.</span></p>
+
+    <p class="beat built">So I built</p>
+    <p class="beat kevin">KEVIN</p>
+    <div class="reveal" aria-hidden="true"><img src="media/layers/interface.jpg" alt="" width="1920" height="1080"></div>
+
+    <div class="hint" aria-hidden="true">Scroll<i></i></div>
+  </div>
+</section>
+
+<section id="anatomy" aria-labelledby="anat-h">
+  <div class="anat-stage">
+    <canvas id="anat" aria-hidden="true"></canvas>
+    <p class="anat-intro">Scroll to take KEVIN apart.</p>
+    <h2 class="sr" id="anat-h">KEVIN, layer by layer</h2>
+    <ol class="alabels">
+      <li class="alabel"><span class="n">// 01 Interface</span><h3>Every agent, one screen.</h3><p>A tab for each agent, each on its own model. A lead agent splits the work, a second AI checks it, and you approve from one place.</p></li>
+      <li class="alabel"><span class="n">// 02 Models</span><h3>Claude and GPT. One brain.</h3><p>Opus, Sonnet, Haiku, Fable and GPT side by side. New models get added to the picker on the care plan.</p></li>
+      <li class="alabel"><span class="n">// 03 Brain</span><h3>Memory you can read.</h3><p>Your rules, prices and lessons live in plain files you own. Correct it once and the lesson gets saved, then applied to the skill it belongs to.</p></li>
+      <li class="alabel"><span class="n">// 04 Skills and robots</span><h3>The repeat work, on a timer.</h3><p>Quotes, follow-ups, invoice reminders and ad reports. Robots run the backup and the morning brief overnight.</p></li>
+      <li class="alabel"><span class="n">// 05 Hooks</span><h3>Nothing reaches a customer without your yes.</h3><p>Code that runs before the AI acts. Customer messages are held. The money and delete tools you name are blocked.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="what" aria-labelledby="what-h">
+  <div class="wrap">
+    <h2 class="display" id="what-h">A custom-coded terminal and .md file system, set up around <span class="y">your</span> business.</h2>
+    <div class="what-row">
+      <p class="lead">The step from everyday chat window user to running a team of agents on your company's operations. It knows your business, and it's connected where it needs to be.</p>
+      <div class="ctas">
+        <a class="btn btn-solid" href="mailto:amaisao48@gmail.com?subject=KEVIN%20build">Book a build <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        <a class="btn btn-line" href="#who">Who it's for</a>
+      </div>
+    </div>
+    <ul class="facts" aria-label="What KEVIN includes">
+      <li><b>Claude and GPT</b><span>New models added on the care plan</span></li>
+      <li><b>Persistent memory</b><span>Corrections saved as lessons</span></li>
+      <li><b>A team of agents</b><span>On the Full build</span></li>
+      <li><b>Controls your PC</b><span>Files, browser, scheduled jobs</span></li>
+      <li><b>Hooks and locks</b><span>Customer messages wait for you</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="screens" aria-labelledby="screens-h">
+  <div class="sc-stage">
+    <div class="sc-head"><h2 class="sr" id="screens-h">Real interfaces</h2><span class="sc-prod">Liberty Cockpit</span><span class="sc-skin">Baseline theme</span><span class="sc-count">1 / 5</span></div>
+    <div class="sc-deck"><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-launch.jpg" alt="The real Liberty Cockpit launch card: engine and effort picker, command deck on the left." width="3840" height="2160"><div class="dim"></div><div class="pop" style="left:31.4%;top:32.8%;width:33.8%;height:45.5%;background-size:295.86% 219.78%;background-position:47.432% 60.183%" data-bg="media/ui/liberty-launch.jpg"></div><div class="pop" style="left:0.3%;top:9%;width:11.2%;height:47%;background-size:892.86% 212.77%;background-position:0.338% 16.981%" data-bg="media/ui/liberty-launch.jpg"></div><span class="tag">Pick the engine and the effort for each tab</span><span class="tag">A command deck: one click per job</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-chat.jpg" alt="The real Liberty Cockpit chat mid-job: thinking, a helper agent, the quote diff and the live brain." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop" style="left:13.4%;top:17.5%;width:38%;height:15.5%;background-size:263.16% 645.16%;background-position:21.613% 20.710%" data-bg="media/ui/liberty-chat.jpg"></div><div class="pop" style="left:13.4%;top:40.6%;width:38%;height:10.2%;background-size:263.16% 980.39%;background-position:21.613% 45.212%" data-bg="media/ui/liberty-chat.jpg"></div><div class="pop" style="left:13.4%;top:52%;width:34%;height:17.4%;background-size:294.12% 574.71%;background-position:20.303% 62.954%" data-bg="media/ui/liberty-chat.jpg"></div><div class="pop" style="left:85%;top:78.4%;width:14.7%;height:17.8%;background-size:680.27% 561.80%;background-position:99.648% 95.377%" data-bg="media/ui/liberty-chat.jpg"></div><span class="tag">You ask. Kevin thinks out loud.</span><span class="tag">A helper agent checks the price book</span><span class="tag">The quote, written line by line</span><span class="tag">The brain, live</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-perm.jpg" alt="The real permission card: the full email to the customer, with Allow once or No." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop" style="left:36.4%;top:35.4%;width:27.2%;height:29.2%;background-size:367.65% 342.47%;background-position:50.000% 50.000%" data-bg="media/ui/liberty-perm.jpg"></div><span class="tag">It asks before it sends anything</span></figure><figure class="sc" data-prod="Money Engine" data-skin="Witch's Lab skin"><img src="media/ui/desk-witch-tabs.jpg" alt="A second custom interface: agent tabs, a diff and the finished quote." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop" style="left:19%;top:14.4%;width:30%;height:17.6%;background-size:333.33% 568.18%;background-position:27.143% 17.476%" data-bg="media/ui/desk-witch-tabs.jpg"></div><div class="pop" style="left:19%;top:43%;width:36%;height:21%;background-size:277.78% 476.19%;background-position:29.688% 54.430%" data-bg="media/ui/desk-witch-tabs.jpg"></div><span class="tag">Every edit, shown line by line</span><span class="tag">Finished work, waiting for your yes</span></figure><figure class="sc" data-prod="Game Lab" data-skin="Terminal skin"><img src="media/ui/gamelab-session.jpg" alt="A third custom interface: a Claude Code terminal with quick moves and a notebook." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop" style="left:13.4%;top:7%;width:29.6%;height:73%;background-size:337.84% 136.99%;background-position:19.034% 25.926%" data-bg="media/ui/gamelab-session.jpg"></div><div class="pop" style="left:0.4%;top:7%;width:11.6%;height:26%;background-size:862.07% 384.62%;background-position:0.452% 9.459%" data-bg="media/ui/gamelab-session.jpg"></div><span class="tag">A real Claude Code terminal</span><span class="tag">One-click moves for repeat jobs</span></figure></div>
+    <p class="sc-note">Real interfaces. Sample company.</p>
+  </div>
+</section>
+
+<section class="styles" id="styles" aria-labelledby="styles-h">
+  <div class="wrap">
+    <div class="styles-head">
+      <h2 class="display" id="styles-h">Your own interface. Built for your brand.</h2>
+      <p class="lead">Real interfaces, shown with sample data. Same engine underneath, a different look on top. Yours gets its own.</p>
+    </div>
+    <div class="style-tabs" role="tablist" aria-label="Interface styles">
+      <button role="tab" id="st-1" aria-controls="style-panel" aria-selected="true" data-v="media/ui/liberty-stream.mp4" data-p="media/ui/liberty-stream-poster.jpg">Liberty Cockpit<small>A job, start to finish</small></button>
+      <button role="tab" id="st-2" aria-controls="style-panel" aria-selected="false" tabindex="-1" data-v="media/ui/liberty-tabs.mp4" data-p="media/ui/liberty-tabs-poster.jpg">Liberty Cockpit<small>Four tabs, four models</small></button>
+      <button role="tab" id="st-3" aria-controls="style-panel" aria-selected="false" tabindex="-1" data-v="media/ui/desk-mission-chat.mp4" data-p="media/ui/desk-mission-chat-poster.jpg">Money Engine<small>Mission</small></button>
+      <button role="tab" id="st-4" aria-controls="style-panel" aria-selected="false" tabindex="-1" data-v="media/ui/gamelab-session.mp4" data-p="media/ui/gamelab-session-poster.jpg">Game Lab<small>Terminal</small></button>
+    </div>
+    <div class="style-frame" id="style-panel" role="tabpanel" aria-labelledby="st-1">
+      <video id="style-video" controls src="media/ui/liberty-stream.mp4" poster="media/ui/liberty-stream-poster.jpg" muted loop playsinline preload="none" aria-label="A real KEVIN interface running a sample job from request to finished draft."></video>
+    </div>
+  </div>
+</section>
+
+<section id="themes" aria-labelledby="themes-h">
+  <div class="th-stage">
+    <div class="th-copy">
+      <h2 class="display" id="themes-h">One cockpit.<br>Seven looks.</h2>
+      <p class="lead">Same app, same brain, same work. Pick a theme or have one built in your brand colors.</p>
+      <ol class="swatches"><li class="sw" data-i="0" style="--bg:#0b0b0d;--pn:#1c1c1f;--ac:#d9a53a;--tx:#e8e6df"><button type="button" aria-label="Show the Baseline theme"><span class="chips"><i style="background:#0b0b0d"></i><i style="background:#1c1c1f"></i><i style="background:#d9a53a"></i><i style="background:#e8e6df"></i></span><b>Baseline</b><small>The default. Gold on graphite.</small></button></li><li class="sw" data-i="1" style="--bg:#0c172a;--pn:#16243a;--ac:#c9a44a;--tx:#fce484"><button type="button" aria-label="Show the Liberty theme"><span class="chips"><i style="background:#0c172a"></i><i style="background:#16243a"></i><i style="background:#c9a44a"></i><i style="background:#fce484"></i></span><b>Liberty</b><small>Navy and gold, the company colors.</small></button></li><li class="sw" data-i="2" style="--bg:#040a17;--pn:#0a1529;--ac:#fccc3c;--tx:#ffffff"><button type="button" aria-label="Show the Topcoat theme"><span class="chips"><i style="background:#040a17"></i><i style="background:#0a1529"></i><i style="background:#fccc3c"></i><i style="background:#ffffff"></i></span><b>Topcoat</b><small>The epoxy-floor flagship look.</small></button></li><li class="sw" data-i="3" style="--bg:#060c14;--pn:#0f232a;--ac:#3cb4cc;--tx:#9cfcfc"><button type="button" aria-label="Show the Jarvis theme"><span class="chips"><i style="background:#060c14"></i><i style="background:#0f232a"></i><i style="background:#3cb4cc"></i><i style="background:#9cfcfc"></i></span><b>Jarvis</b><small>Cyan heads-up display.</small></button></li><li class="sw" data-i="4" style="--bg:#040a06;--pn:#0c1911;--ac:#3ce484;--tx:#b8f5cc"><button type="button" aria-label="Show the Phosphor theme"><span class="chips"><i style="background:#040a06"></i><i style="background:#0c1911"></i><i style="background:#3ce484"></i><i style="background:#b8f5cc"></i></span><b>Phosphor</b><small>Green terminal glass.</small></button></li><li class="sw" data-i="5" style="--bg:#12150c;--pn:#1e2316;--ac:#e4b46c;--tx:#b4fcb4"><button type="button" aria-label="Show the COD4 theme"><span class="chips"><i style="background:#12150c"></i><i style="background:#1e2316"></i><i style="background:#e4b46c"></i><i style="background:#b4fcb4"></i></span><b>COD4</b><small>Field ops, olive and sand.</small></button></li><li class="sw" data-i="6" style="--bg:#efefec;--pn:#dfddd6;--ac:#cc9c3c;--tx:#2a2a2a"><button type="button" aria-label="Show the Concrete theme"><span class="chips"><i style="background:#efefec"></i><i style="background:#dfddd6"></i><i style="background:#cc9c3c"></i><i style="background:#2a2a2a"></i></span><b>Concrete</b><small>The light one, for daytime.</small></button></li></ol>
+    </div>
+    <div class="th-frame"><img class="tl" data-i="0" src="media/ui/theme-baseline.jpg" alt="Liberty Cockpit in the Baseline theme" width="3200" height="1800"><img class="tl" data-i="1" src="media/ui/theme-liberty.jpg" alt="Liberty Cockpit in the Liberty theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="2" src="media/ui/theme-topcoat.jpg" alt="Liberty Cockpit in the Topcoat theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="3" src="media/ui/theme-jarvis.jpg" alt="Liberty Cockpit in the Jarvis theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="4" src="media/ui/theme-phosphor.jpg" alt="Liberty Cockpit in the Phosphor theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="5" src="media/ui/theme-cod4-2.jpg" alt="Liberty Cockpit in the COD4 theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="6" src="media/ui/theme-concrete.jpg" alt="Liberty Cockpit in the Concrete theme" width="3200" height="1800" loading=lazy><span class="th-name" aria-hidden="true">Baseline</span></div>
+  </div>
+</section>
+
+<section class="who" id="who" aria-labelledby="who-h">
+  <div class="who-pin">
+    <div class="wrap who-head">
+      <h2 class="display" id="who-h">Who it's for.</h2>
+      <p class="lead">The interview shapes KEVIN around how you make money. Example builds:</p>
+    </div>
+    <div class="track">
+      <article class="case">
+        <span class="k">Realtors</span>
+        <h3>A reply drafted for every lead while you're at a showing.</h3>
+        <p>Listing descriptions from your notes and photos, showing follow-ups, open house recaps, and a weekly market brief for your sphere.</p>
+<div class="tree"><b>realty/</b>
+├ <i>brain/</i> LISTINGS.md  CLIENTS.md  MARKET.md
+├ <i>skills/</i> listing-writer  showing-followup
+└ <i>robots/</i> new-lead-check  market-brief</div>
+      </article>
+      <article class="case">
+        <span class="k">Developers</span>
+        <h3>Every project, permit and contractor in one brain.</h3>
+        <p>Investor updates drafted from site notes, bids compared line by line, permit deadlines tracked, and a Monday brief across every project.</p>
+<div class="tree"><b>development/</b>
+├ <i>projects/</i> 1140-main/  riverside-lofts/
+├ <i>skills/</i> investor-update  bid-compare
+└ <i>robots/</i> permit-deadlines  monday-brief</div>
+      </article>
+      <article class="case">
+        <span class="k">Contractors and trades</span>
+        <h3>Quotes from job notes. Invoice reminders on schedule.</h3>
+        <p>Lead replies, priced quotes, invoice reminders and review replies. I run my family's flooring company on this shape.</p>
+<div class="tree"><b>company/</b>
+├ <i>brain/</i> PRICES.md  LEADS.md  JOBS.md
+├ <i>skills/</i> quote-from-notes  lead-reply
+└ <i>robots/</i> lead-check  nightly-backup</div>
+      </article>
+      <article class="case">
+        <span class="k">Brokers</span>
+        <h3>Research before every call. Follow-up after every silence.</h3>
+        <p>Prospect research, follow-ups when a deal goes quiet, deal summaries, and a pipeline brief every morning.</p>
+<div class="tree"><b>brokerage/</b>
+├ <i>brain/</i> PIPELINE.md  ACCOUNTS.md
+├ <i>skills/</i> prospect-research  follow-up
+└ <i>robots/</i> stale-deal-check</div>
+      </article>
+      <article class="case">
+        <span class="k">Agencies</span>
+        <h3>Client reports and content calendars without the late nights.</h3>
+        <p>One brain per client, ad reports across accounts, content drafted in each client's voice, and a roll-up for you.</p>
+<div class="tree"><b>agency/</b>
+├ <i>clients/</i> north-coffee/  dyer-law/
+├ <i>skills/</i> ad-report  content-calendar
+└ <i>robots/</i> rollup-report</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="market" aria-labelledby="market-h">
+  <div class="wrap market-grid">
+    <div>
+      <h2 class="display" id="market-h">The daily work of a marketing team.</h2>
+      <p class="lead" style="margin-top:20px">It drafts, reports and follows up every day, in your voice, from what it knows about your business. You approve what goes out.</p>
+    </div>
+    <dl class="jobs">
+      <div><dt>Ad report</dt><dd>Spend, leads and cost per lead from your ad accounts, every Monday.</dd><span class="tag">Report</span></div>
+      <div><dt>Social posts</dt><dd>A week of posts written from your real jobs and photos.</dd><span class="tag held">Held for you</span></div>
+      <div><dt>Review replies</dt><dd>A reply drafted for every new review.</dd><span class="tag held">Held for you</span></div>
+      <div><dt>Lead follow-up</dt><dd>Replies to new leads, then follow-ups until they answer.</dd><span class="tag held">Held for you</span></div>
+      <div><dt>Email campaigns</dt><dd>Seasonal offers to past customers, written and segmented.</dd><span class="tag held">Held for you</span></div>
+      <div><dt>The numbers</dt><dd>What worked last month in plain English, and what to try next.</dd><span class="tag">Report</span></div>
+    </dl>
+  </div>
+</section>
+
+<section class="files" id="files" aria-labelledby="files-h">
+  <div class="wrap">
+    <div class="files-head">
+      <h2 class="display" id="files-h">Open the folder.</h2>
+      <p class="lead">Everything KEVIN knows lives in plain files you can read. These are the real formats, from a sample build.</p>
+    </div>
+    <div class="ide">
+      <div class="ide-tabs" role="tablist" aria-label="Sample files">
+        <button role="tab" id="ft-claude" aria-controls="fp-claude" aria-selected="true">CLAUDE.md</button>
+        <button role="tab" id="ft-lessons" aria-controls="fp-lessons" aria-selected="false" tabindex="-1">LESSONS.md</button>
+        <button role="tab" id="ft-skill" aria-controls="fp-skill" aria-selected="false" tabindex="-1">SKILL.md</button>
+        <button role="tab" id="ft-hook" aria-controls="fp-hook" aria-selected="false" tabindex="-1">settings.json</button>
+        <button role="tab" id="ft-locks" aria-controls="fp-locks" aria-selected="false" tabindex="-1">locks.py</button>
+      </div>
+      <div class="ide-body">
+        <aside class="ide-note" aria-live="polite">
+          <p data-for="claude"><b>The operating manual.</b> Every agent reads this first, on any model. Laws, startup steps and voice live here. Codex reads the same rules from AGENTS.md.</p>
+          <p data-for="lessons" hidden><b>The memory.</b> Each correction becomes a dated line. Agents read the newest lessons at the start of every session.</p>
+          <p data-for="skill" hidden><b>A skill.</b> One repeat job, written as steps the AI follows. Skills get rewritten when a lesson shows a better way.</p>
+          <p data-for="hook" hidden><b>A hook.</b> This tells KEVIN to run a check before the AI sends, refunds or deletes anything.</p>
+          <p data-for="locks" hidden><b>The lock itself.</b> Plain code. When it exits with code 2, the action stops and the AI gets told why.</p>
+        </aside>
+<pre class="code" role="tabpanel" id="fp-claude" aria-labelledby="ft-claude" tabindex="0"><code><span class="h"># HALVORSEN PLUMBING: operating system</span>
+You run the office for Halvorsen Plumbing. Read this first, every session.
+
+<span class="h">## On startup</span>
+1. Read brain/00_STATUS.md, then the brain file for today's job.
+2. Read the newest 10 lines of brain/LESSONS.md.
+
+<span class="h">## Laws</span>
+1. Nothing reaches a customer without Mike's yes.
+2. Prices come from brain/PRICES.md. Never invent one.
+3. Every lesson goes in brain/LESSONS.md the day it happens.
+
+<span class="h">## Voice</span>
+Plain English. Short sentences. Sign texts "Mike, Halvorsen Plumbing".</code></pre>
+<pre class="code" role="tabpanel" id="fp-lessons" aria-labelledby="ft-lessons" tabindex="0" hidden><code><span class="h"># LESSONS (newest last)</span>
+
+<span class="c">- 2026-10-03:</span> Water heater quotes need the permit line.
+  Added to quote-from-notes.
+<span class="c">- 2026-10-09:</span> Brennan pays on the 15th. Reminders wait
+  until the 16th.
+<span class="c">- 2026-10-12:</span> Dana prefers texts after 5 PM.
+  lead-reply now checks LEADS.md for a contact preference.</code></pre>
+<pre class="code" role="tabpanel" id="fp-skill" aria-labelledby="ft-skill" tabindex="0" hidden><code><span class="c">---</span>
+<span class="k">name:</span> quote-from-notes
+<span class="k">description:</span> Turn a job's notes and photos into a priced
+  quote draft. Use when Mike says "quote" plus a job name.
+<span class="c">---</span>
+1. Read jobs/&lt;job&gt;/notes.md and any photos.
+2. Price every line from brain/PRICES.md. Flag anything
+   with no price.
+3. Add permit and haul-away when the job replaces equipment.
+4. Save the draft to drafts/quotes/. Never send it.
+5. Show Mike the total and the lines he should check.</code></pre>
+<pre class="code" role="tabpanel" id="fp-hook" aria-labelledby="ft-hook" tabindex="0" hidden><code>{
+  <span class="k">"hooks"</span>: {
+    <span class="k">"PreToolUse"</span>: [
+      {
+        <span class="k">"matcher"</span>: <span class="s">"send_email|send_text|refund|delete_file"</span>,
+        <span class="k">"hooks"</span>: [
+          { <span class="k">"type"</span>: <span class="s">"command"</span>, <span class="k">"command"</span>: <span class="s">"python hooks/locks.py"</span> }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+<pre class="code" role="tabpanel" id="fp-locks" aria-labelledby="ft-locks" tabindex="0" hidden><code><span class="c">"""Runs before the AI acts. Exit code 2 stops the action."""</span>
+<span class="k">import</span> json, sys
+<span class="k">from</span> approvals <span class="k">import</span> approved
+
+call = json.load(sys.stdin)
+tool = call[<span class="s">"tool_name"</span>]
+
+<span class="k">if</span> tool <span class="k">in</span> (<span class="s">"refund"</span>, <span class="s">"delete_file"</span>):
+    print(<span class="s">"Money moves and deletions are locked."</span>, file=sys.stderr)
+    sys.exit(2)
+
+<span class="k">if</span> tool.startswith(<span class="s">"send_"</span>) <span class="k">and not</span> approved(call):
+    print(<span class="s">"Held: customer messages wait for Mike's yes."</span>, file=sys.stderr)
+    sys.exit(2)</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lib" aria-labelledby="lib-h">
+  <div class="wrap lib-grid">
+    <div>
+      <h2 class="display" id="lib-h">A researched skill library.</h2>
+      <p class="lead" style="margin-top:20px">Skills I built for a real company, plus proven ones from the open skills ecosystem. Your interview decides which ones you get and how each one is tuned.</p>
+    </div>
+    <div class="shelf">
+      <div><h3>Sales</h3><p class="mono">quote-from-notes<br>lead-reply<br>follow-up<br>prospect-research<br>deal-summary</p></div>
+      <div><h3>Marketing</h3><p class="mono">ad-report<br>social-posts<br>review-reply<br>email-campaign<br>web-design</p></div>
+      <div><h3>Money</h3><p class="mono">invoice-reminder<br>weekly-numbers<br>expense-log<br>price-check</p></div>
+      <div><h3>Operations</h3><p class="mono">morning-brief<br>job-schedule<br>handoff<br>health-check<br>second-opinion</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="here" aria-labelledby="here-h">
+  <div class="wrap here-grid">
+    <h2 class="display" id="here-h">This page was built in KEVIN.</h2>
+    <div>
+      <p>This page was designed and coded inside the same kind of setup you get. Yours can build pages like it.</p>
+      <p>And yes, AI built it. The AI runs your interview, reads how your tools fit together, and shapes the brain, the skills and the hooks around you. I check every piece on your real files before it's yours.</p>
+    </div>
+  </div>
+</section>
+
+<section class="build" aria-labelledby="build-h">
+  <div class="wrap">
+    <h2 class="display" id="build-h">Interview to handover.</h2>
+    <ol>
+      <li><span class="wk">Week 1</span><h3>Interview</h3><p>You talk through how the business runs. The AI listens for the work that eats your week.</p></li>
+      <li><span class="wk">Week 1</span><h3>Blueprint</h3><p>Your shape, rules and first skills. You approve them before anything gets built.</p></li>
+      <li><span class="wk">Weeks 2 and 3</span><h3>Build</h3><p>AI writes the skills, robots and hooks. I test each one on your real files.</p></li>
+      <li><span class="wk">Week 3 or 4</span><h3>Dry run</h3><p>KEVIN runs next to you. Drafts only, nothing leaves.</p></li>
+      <li><span class="wk">Handover</span><h3>Yours</h3><p>A recorded walkthrough and every custom file I built. You own them.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="pricing" id="pricing" aria-labelledby="price-h">
+  <div class="wrap">
+    <h2 class="display" id="price-h">Pricing.</h2>
+    <p class="lead" style="margin-top:20px">One-time build. Starter takes about 2 weeks, Full about 4. Optional care after handover.</p>
+    <table class="ptable">
+      <caption class="sr">Starter and Full compared</caption>
+      <thead><tr>
+        <th scope="col"><span class="sr">Feature</span></th>
+        <th scope="col"><span class="plan">Starter</span><span class="price">$1,500</span><span class="when">About 2 weeks</span><a class="btn btn-line" href="mailto:amaisao48@gmail.com?subject=KEVIN%20Starter">Book Starter</a></th>
+        <th scope="col"><span class="plan">Full</span><span class="price">$3,500</span><span class="when">About 4 weeks</span><a class="btn btn-solid" href="mailto:amaisao48@gmail.com?subject=KEVIN%20Full">Book Full</a></th>
+      </tr></thead>
+      <tbody>
+        <tr><th scope="row">Interview and blueprint</th><td>Included</td><td>Included</td></tr>
+        <tr><th scope="row">Brain, memory and the KEVIN app</th><td>Included</td><td>Included</td></tr>
+        <tr><th scope="row">Skills</th><td>5</td><td>Up to 12</td></tr>
+        <tr><th scope="row">Robots</th><td>2: brief and backup</td><td>Up to 6</td></tr>
+        <tr><th scope="row">Team of agents</th><td class="dash">Not included</td><td>Included</td></tr>
+        <tr><th scope="row">Hooks and locks</th><td>Included</td><td>Included</td></tr>
+        <tr><th scope="row">Hooked to your tools</th><td class="dash">Not included</td><td>Where they allow it, drafts only</td></tr>
+        <tr><th scope="row">Dry run</th><td>3 days</td><td>7 days</td></tr>
+        <tr><th scope="row">Walkthrough video</th><td>Included</td><td>Included</td></tr>
+        <tr><th scope="row">Fixes after handover</th><td>30 days</td><td>60 days</td></tr>
+      </tbody>
+    </table>
+    <div class="care">
+      <b>Care plan</b>
+      <p>A monthly health check, one new skill a month, supported new models added, and fixes. Cancel any month.</p>
+      <span class="amt">$200<small>a month</small></span>
+    </div>
+    <p class="pnote">Your Claude or ChatGPT plan is separate and billed to you by them.</p>
+  </div>
+</section>
+
+<section class="founder" aria-label="Who builds it">
+  <div class="wrap">
+    <img src="media/headshot_square.jpg" alt="Anthony Maisano" width="800" height="800" loading="lazy" decoding="async">
+    <figure>
+      <blockquote>I run my family's flooring company outside Philadelphia on KEVIN: leads, quotes, follow-ups, ad reports and the nightly backup. I build yours from the same parts.</blockquote>
+      <figcaption><cite>Anthony Maisano, who builds every KEVIN</cite></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="faq" aria-labelledby="faq-h">
+  <div class="wrap">
+    <h2 class="display" id="faq-h">Questions.</h2>
+    <div class="faq-list">
+      <details><summary>Do I need to know how to code?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg></summary><p>No. You ask in plain English. The walkthrough covers every button.</p></details>
+      <details><summary>Which AI models does it run?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg></summary><p>Claude (Opus, Sonnet, Haiku and Fable) and GPT through Codex today. On the care plan, I add supported new models to the picker after I test them.</p></details>
+      <details><summary>Will it send anything on its own?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg></summary><p>No. It drafts and waits. You approve each message before it goes out.</p></details>
+      <details><summary>Who sees my data?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg></summary><p>Your files live on your computer and in your private backup. What you ask the AI goes to the model provider you choose (Anthropic or OpenAI) under your own account. I work inside your setup during the build and delete my working copy at handover.</p></details>
+      <details><summary>Can it talk?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg></summary><p>Mine answers to "Hey Kevin." Voice is a separate add-on once yours has run for 30 days.</p></details>
+      <details><summary>What if something breaks?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg></summary><p>Fixes are free for 30 or 60 days, depending on your build. After that, the care plan covers it.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final" aria-labelledby="final-h">
+  <div class="wrap">
+    <h2 class="display" id="final-h">Close the chat window.</h2>
+    <div class="ctas"><a class="btn btn-solid" href="mailto:amaisao48@gmail.com?subject=KEVIN%20build">Book a build <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap"><span>KEVIN, built by Anthony Maisano</span><span>Runs on Claude and GPT</span></div></footer>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/SplitText.min.js"></script>
+<script src="vendor/ScrambleTextPlugin.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script>
+(function(){
+  var root=document.documentElement;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduce&&window.gsap){root.classList.remove('static')}
+
+  function STYLE_TABS_INIT(){
+      var tabs=[].slice.call(document.querySelectorAll('.style-tabs [role=tab]')),v=document.getElementById('style-video');
+      function pick(t,focus){tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1});
+        v.style.opacity=0;setTimeout(function(){v.poster=t.dataset.p;v.src=t.dataset.v;v.play().catch(function(){});v.style.opacity=1},200);
+        if(focus)t.focus()}
+      tabs.forEach(function(t,i){t.addEventListener('click',function(){pick(t)});
+        t.addEventListener('keydown',function(e){var n=null;if(e.key==='ArrowRight')n=tabs[(i+1)%tabs.length];if(e.key==='ArrowLeft')n=tabs[(i-1+tabs.length)%tabs.length];if(n){e.preventDefault();pick(n,true)}})});
+  }
+  var nav=document.getElementById('nav'),intro=document.getElementById('intro');
+  function navState(){nav.classList.toggle('solid',scrollY>intro.offsetHeight-80)}
+  addEventListener('scroll',navState,{passive:true});navState();
+
+  function load(v){if(v.dataset.src&&!v.getAttribute('src')){v.src=v.dataset.src}}
+  var vio=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;
+    if(e.isIntersecting){load(v);if(!v.closest('.stage')||v.classList.contains('on'))v.play().catch(function(){})}else v.pause();
+  })},{rootMargin:'200px 0px'});
+  document.querySelectorAll('video').forEach(function(v){vio.observe(v)});
+
+  var ftabs=[].slice.call(document.querySelectorAll('.ide-tabs [role=tab]'));
+  function fpick(t,focus){ftabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+    document.getElementById(x.getAttribute('aria-controls')).hidden=!on});
+    var key=t.getAttribute('aria-controls').slice(3);
+    document.querySelectorAll('.ide-note [data-for]').forEach(function(p){p.hidden=p.dataset.for!==key});
+    if(focus)t.focus()}
+  ftabs.forEach(function(t,i){t.addEventListener('click',function(){fpick(t)});
+    t.addEventListener('keydown',function(e){var n=null;
+      if(e.key==='ArrowRight')n=ftabs[(i+1)%ftabs.length];if(e.key==='ArrowLeft')n=ftabs[(i-1+ftabs.length)%ftabs.length];
+      if(n){e.preventDefault();fpick(n,true)}})});
+
+  STYLE_TABS_INIT();
+  if(root.classList.contains('static'))return;
+  gsap.registerPlugin(ScrollTrigger,SplitText,ScrambleTextPlugin);
+  ScrollTrigger.config({ignoreMobileResize:true});
+  root.classList.add('js');
+
+  if(window.Lenis&&matchMedia('(pointer:fine)').matches){
+    var lenis=new Lenis({lerp:.1,wheelMultiplier:.9});window.__lenis=lenis;
+    lenis.on('scroll',ScrollTrigger.update);
+    gsap.ticker.add(function(t){lenis.raf(t*1000)});gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){
+      var id=a.getAttribute('href');if(id.length<2)return;var t=document.querySelector(id);if(!t)return;
+      e.preventDefault();lenis.scrollTo(t,{offset:id==='#top'?0:-72,duration:1.4})})});
+  }
+
+  document.fonts.ready.then(function(){
+    var q1=new SplitText('#q1',{type:'words',wordsClass:'w'});
+    var b2=new SplitText('.b2',{type:'words,chars',wordsClass:'wd',charsClass:'c'});
+    var b3=new SplitText('.b3',{type:'words',wordsClass:'w'});
+    var kv=new SplitText('.kevin',{type:'chars',charsClass:'c'});
+
+    gsap.from('#q1',{opacity:0,duration:.9,ease:'power2.out',delay:.1});gsap.from(q1.words,{y:60,duration:1.3,ease:'expo.out',stagger:.07,delay:.15});
+    gsap.from('.hint',{opacity:0,duration:1,delay:1.4});
+    gsap.set('.b6 span',{y:30});
+
+    var msgs=document.getElementById('msgs'),chatH=document.querySelector('.chat.one').offsetHeight;
+    var travel=Math.max(0,msgs.scrollHeight-chatH+150);
+    var ctx={v:12},ctxn=document.getElementById('ctxn');
+
+    var tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:'#intro',start:'top top',end:'bottom bottom',scrub:.8}});
+    tl.to('.hint',{opacity:0,duration:.3},0)
+      .to(q1.words,{yPercent:-40,opacity:0,stagger:.04,duration:.8,ease:'power2.in'},.2)
+      .set('.b2',{opacity:1},1.0)
+      .fromTo(b2.chars,{scale:2.6,opacity:0},{scale:1,opacity:1,stagger:.035,duration:.5,ease:'expo.out'},1.0)
+      .to('.b2',{keyframes:{x:[0,-14,12,-8,6,0]},duration:.35},1.75)
+      .to('.b2',{opacity:0,scale:.92,duration:.5,ease:'power2.in'},2.6)
+      .to('.b3',{opacity:1,duration:.2},3.25)
+      .to(b3.words,{opacity:1,stagger:.07,duration:.25},3.3)
+      .to('.b3',{opacity:0,y:-40,duration:.5,ease:'power2.in'},5.5)
+      .fromTo('.chatwrap',{opacity:0,y:80,scale:.94},{opacity:1,y:0,scale:1,duration:.6,ease:'power3.out'},6.0)
+      .to('.c1',{opacity:1,duration:.3},6.2)
+      .to(msgs,{y:-travel,duration:3},6.5)
+      .to(ctx,{v:100,duration:3,onUpdate:function(){ctxn.textContent=Math.round(ctx.v)+'%';ctxn.parentNode.classList.toggle('hot',ctx.v>85)}},6.5)
+      .to('.c1',{opacity:0,duration:.25},8.7)
+      .to('.c2',{opacity:1,duration:.3},8.9)
+      .to('.flag',{opacity:1,duration:.15},9.0)
+      .to('.scr',{scrambleText:{text:'{original}',chars:'01#%&?!',revealDelay:0,speed:.6},duration:.8},9.0)
+      .to('.chat.one',{keyframes:{x:[0,-6,5,-3,0],skewX:[0,2,-2,1,0]},duration:.4},9.4)
+      .to('.c2',{opacity:0,duration:.25},10.1)
+      .to('.c3',{opacity:1,duration:.3},10.3)
+      .to('.chat.one',{opacity:.25,scale:.94,duration:.5},10.3)
+      .to('.flag',{opacity:0,duration:.2},10.3)
+      .to('.chat.two',{x:'0%',opacity:1,duration:.7,ease:'expo.out'},10.4)
+      .to(['.chatwrap','.c3'],{opacity:0,y:-60,duration:.5,ease:'power2.in'},11.6)
+      .to('.b5 .ln>span',{y:'0%',stagger:.18,duration:.6,ease:'expo.out'},12.2)
+      .to('.b5',{opacity:0,duration:.4,ease:'power2.in'},13.6)
+      .to('.b6 span',{opacity:1,y:0,stagger:.45,duration:.35},14.0)
+      .to('.b6',{opacity:0,duration:.4},15.4)
+      .to('.built',{opacity:1,duration:.4},15.9)
+      .set('.kevin',{opacity:1},16.3)
+      .fromTo(kv.chars,{opacity:0,yPercent:30,x:function(i){return (i-2)*120},},{opacity:1,yPercent:0,x:0,stagger:.08,duration:.9,ease:'expo.out'},16.3)
+      .to('.built',{opacity:0,duration:.3},17.8)
+      .to('.reveal',{opacity:1,duration:.2},17.9)
+      .fromTo('.reveal',{scale:.12},{scale:1,duration:1.6,ease:'power2.inOut'},17.9)
+      .to('.kevin',{scale:5,opacity:0,duration:1.2,ease:'power2.in'},17.9)
+      .to({},{duration:.8});
+
+    document.querySelectorAll('main section:not(#intro) h2.display').forEach(function(h){
+      var sp=new SplitText(h,{type:'words',wordsClass:'w'});
+      gsap.from(sp.words,{yPercent:50,opacity:0,duration:1,ease:'expo.out',stagger:.04,
+        scrollTrigger:{trigger:h,start:'top 85%',once:true}});
+    });
+
+
+
+    new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();document.querySelectorAll('#screens .pop[data-bg]').forEach(function(el){el.style.backgroundImage='url('+el.dataset.bg+')'})},{rootMargin:'1200px 0px'}).observe(document.getElementById('screens'));
+    // Screens: each real interface in turn, parts lifted out and labeled
+    (function(){
+      var figs=[].slice.call(document.querySelectorAll('#screens .sc'));
+      var prod=document.querySelector('.sc-prod'),skin=document.querySelector('.sc-skin'),count=document.querySelector('.sc-count');
+      var st=gsap.timeline({defaults:{ease:'power3.inOut'},
+        onUpdate:function(){var t=st.time(),cur=0;marks.forEach(function(m,i){if(t>=m)cur=i});
+          if(prod.dataset.i!=cur){prod.dataset.i=cur;prod.textContent=figs[cur].dataset.prod;skin.textContent=figs[cur].dataset.skin;count.textContent=(cur+1)+' / '+figs.length}},
+        scrollTrigger:{trigger:'#screens',start:'top top',end:'bottom bottom',scrub:.9,invalidateOnRefresh:true}});
+      // lifted parts are laid out at their FINAL size (sharp), then animate in from the region at 1/s scale
+      function LAYOUT(){[].forEach.call(document.querySelectorAll('#screens .pop'),function(el){
+        var f=el.parentNode,fw=f.clientWidth,fh=f.clientHeight;
+        if(!el.dataset.r){el.dataset.r=[el.style.left,el.style.top,el.style.width,el.style.height].map(parseFloat).join(',')}
+        var r=el.dataset.r.split(',').map(Number),rx=fw*r[0]/100,ry=fh*r[1]/100,rw=fw*r[2]/100,rh=fh*r[3]/100;
+        var mob=innerWidth<700,s=mob?Math.min(innerWidth*.96/rw,innerHeight*.45/rh,9):Math.min(innerWidth*.84/rw,innerHeight*.62/rh,3);
+        var W=rw*s,H=rh*s,cx=fw/2,cy=fh*.45;
+        el.style.left=(cx-W/2)+'px';el.style.top=(cy-H/2)+'px';el.style.width=W+'px';el.style.height=H+'px';
+        el._from={x:rx+rw/2-cx,y:ry+rh/2-cy,s:1/s};})}
+      LAYOUT();ScrollTrigger.addEventListener('refreshInit',LAYOUT);
+      var marks=[],t=0;
+      figs.forEach(function(f,i){
+        var pops=f.querySelectorAll('.pop'),tags=f.querySelectorAll('.tag'),dim=f.querySelector('.dim');
+        marks.push(i?t+.3:0);
+        if(i>0){st.fromTo(f,{opacity:1,clipPath:'inset(100% 0% 0% 0%)',y:60},{clipPath:'inset(0% 0% 0% 0%)',y:0,duration:.7,ease:'power3.out'},t);t+=.7}
+        t+=.35;                                        // hold: the whole screen, clear
+        for(var k=0;k<pops.length;k++){
+          st.to(dim,{opacity:.72,duration:.25},t)
+            .fromTo(pops[k],{opacity:1,x:function(i,el){return el._from.x},y:function(i,el){return el._from.y},scale:function(i,el){return el._from.s},clipPath:'inset(0% 100% 0% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:.3,ease:'power2.out',immediateRender:false},t)
+            .to(pops[k],{x:0,y:0,scale:1,duration:.4,ease:'power3.out'},t+.25)
+            .to(tags[k],{opacity:1,y:0,duration:.25},t+.35)
+            .to([pops[k],tags[k]],{opacity:0,duration:.2},t+.95);
+          t+=1.15;
+        }
+        st.to(dim,{opacity:0,duration:.2},t-.1);
+        if(i<figs.length-1){st.to(f,{scale:.94,opacity:.25,duration:.7},t+.15);t+=.15}
+      });
+      st.to({},{duration:.3});
+    })();
+
+
+
+    // Themes: scroll re-skins one cockpit through seven looks; the section takes on each theme's color
+    (function(){
+      var sec=document.getElementById('themes');if(!sec)return;
+      var imgs=[].slice.call(sec.querySelectorAll('.tl')),sws=[].slice.call(sec.querySelectorAll('.sw')),nm=sec.querySelector('.th-name');
+      var cur=-1;
+      function mark(i){if(i===cur)return;cur=i;sws.forEach(function(w,j){w.classList.toggle('on',j===i)});nm.textContent=sws[i].querySelector('b').textContent;
+        sec.style.backgroundColor=getComputedStyle(sws[i]).getPropertyValue('--bg');sec.classList.toggle('light',sws[i].textContent.indexOf('Concrete')===0)}
+      var tt=gsap.timeline({defaults:{ease:'power2.inOut'},onUpdate:function(){mark(Math.min(imgs.length-1,Math.max(0,Math.round(tt.time()-.15))))},
+        scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:.6}});
+      imgs.forEach(function(im,i){if(i===0)return;tt.fromTo(im,{clipPath:'circle(0% at 0% 50%)'},{clipPath:'circle(150% at 0% 50%)',duration:.7},i-.35)});
+      tt.to({},{duration:.4});
+      sws.forEach(function(w,i){w.querySelector('button').addEventListener('click',function(){
+        var st=tt.scrollTrigger;var y=st.start+(st.end-st.start)*Math.min(1,(i+.2)/tt.duration());
+        if(window.__lenis)window.__lenis.scrollTo(y,{duration:1.1});else scrollTo({top:y,behavior:'smooth'})})});
+      mark(0);
+    })();
+
+    var mm=gsap.matchMedia();
+    mm.add('(min-width: 701px)',function(){
+      var track=document.querySelector('.track');
+      function dist(){return Math.max(0,track.scrollWidth-innerWidth)}
+      gsap.to(track,{x:function(){return -dist()},ease:'none',
+        scrollTrigger:{trigger:'.who',start:'top top',end:function(){return '+='+dist()},pin:'.who-pin',scrub:.6,invalidateOnRefresh:true}});
+    });
+
+    gsap.from('.ptable tbody tr',{opacity:0,y:10,duration:.6,ease:'expo.out',stagger:.035,
+      scrollTrigger:{trigger:'.ptable',start:'top 75%',once:true}});
+
+    ScrollTrigger.refresh();
+  });
+})();
+</script>
+<script>(function(){if(document.documentElement.classList.contains('static'))return;var a=document.getElementById('anatomy');new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();import('./js/anatomy.js')},{rootMargin:'1500px 0px'}).observe(a)})();</script>
+</body>
+</html>
