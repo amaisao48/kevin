@@ -3,6 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KEVIN">
+<meta property="og:description" content="A custom interface that any combination of AI models can plug into, and a brain they can read.">
+<meta property="og:url" content="https://amaisao48.github.io/kevin/">
+<meta property="og:image" content="https://amaisao48.github.io/kevin/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://amaisao48.github.io/kevin/og.png">
 <title>KEVIN: stop working out of chat windows</title>
 <meta name="description" content="KEVIN is a custom AI system set up around your business: file-based memory, agents on Claude and GPT, and hooks that hold customer messages for your yes.">
 <meta name="robots" content="noindex, nofollow">
@@ -159,6 +170,11 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .sc .lines .r{stroke-width:2}
 .sc .tag{position:absolute;left:50%;bottom:-14px;translate:-50% 100%;translate:-50% 0;z-index:3;opacity:0;transform:translateY(8px);background:var(--accent);color:#07080B;font:700 clamp(12px,1vw,15px)/1.2 Archivo;font-stretch:104%;padding:9px 12px;white-space:nowrap;box-shadow:0 12px 30px -10px rgba(0,0,0,.8)}
 .sc .tag.solo{top:calc(100% + 14px);bottom:auto}
+.sc .pop .live{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.live .tr{fill:none;stroke:#7DFF9B;stroke-width:3;stroke-linecap:round;stroke-dasharray:22 100;stroke-dashoffset:22;opacity:.9;animation:brainrun 3.4s linear infinite}
+.live .hd{fill:#D9FFE2}
+@keyframes brainrun{0%{stroke-dashoffset:22}62%{stroke-dashoffset:-100}100%{stroke-dashoffset:-100}}
+@media (prefers-reduced-motion:reduce){.live{display:none}}
 .sc .pop .pc{display:none}
 @media (max-width:700px){.sc .pop.has-pc img{display:none}.sc .pop .pc{display:block}}
 .pc{position:relative;height:100%;overflow:hidden;background:#0A0A0B;box-shadow:inset 0 0 0 1px #3a3a3a;padding:12px 14px;font:400 12.5px/1.5 Mono,ui-monospace,monospace;color:#D8D5CE;text-align:left}
@@ -227,14 +243,14 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 @media (max-width:900px){.theme-row{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
 
-/* ===== THEMES: one cockpit, seven looks ===== */
+/* ===== THEMES: one cockpit, five looks ===== */
 #themes.light .th-copy h2,#themes.light .sw.on b{color:#16181D}
 #themes.light .th-copy .lead,#themes.light .sw b{color:#4A4F5C}
 #themes.light .sw small{color:#5E6372}
 #themes.light .sw.on button{background:rgba(0,0,0,.05)}
 #themes.light .sw .chips{box-shadow:0 0 0 1px rgba(0,0,0,.18)}
 
-#themes{position:relative;height:420vh;background:var(--bg);transition:background-color .6s var(--ease)}
+#themes{position:relative;height:330vh;background:var(--bg);transition:background-color .6s var(--ease)}
 #themes h2,#themes .lead,#themes b{transition:color .4s var(--ease)}
 .th-stage{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(300px,.36fr) 1fr;gap:clamp(28px,3vw,56px);align-items:center;padding:80px var(--gut) 40px}
 .th-copy h2{font-size:clamp(38px,4.4vw,68px)}
@@ -257,10 +273,10 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .static .th-frame .tl:first-child{clip-path:none}
 @media (max-width:1020px){
   .th-stage{grid-template-columns:1fr;align-content:center;gap:18px;padding-top:76px}
-  .swatches{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:16px;gap:4px}
+  .swatches{grid-template-columns:repeat(5,minmax(0,1fr));margin-top:16px;gap:4px}
   .sw button{grid-template-columns:1fr;padding:6px}
   .sw .chips{grid-row:auto}.sw .chips i{flex:1;height:18px;width:auto}
-  .sw small{display:none}.sw b{font-size:13px;margin-top:6px}
+  .sw small{display:none}.sw b{font-size:12px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:clip}
   .th-copy .lead{display:none}
 }
 
@@ -273,7 +289,7 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .an-layer::after{content:'';position:absolute;inset:0;z-index:4;pointer-events:none;background:#05060A;opacity:var(--dim,0)}
 .an-layer[data-k="interface"]{--ec:#FFD23F}
 .an-in{position:absolute;left:0;top:0;width:1920px;height:1080px}
-.pt .an-in{width:1080px;height:1300px;zoom:.5}
+.pt .an-in{width:1080px;height:1300px;transform:scale(.5);transform-origin:0 0}
 .anat-static .an-scene,.static .an-scene{display:none}
 
 /* shared layer parts (from the old layer artwork, now live code) */
@@ -436,7 +452,7 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .pt .an-in .log div{font-size:29px;padding:17px 0}
 .pt .an-in .ltag{font-size:23px;padding:8px 10px}
 .pt .lc-top{height:104px;padding:0 40px}
-.pt .lc-brand{font-size:40px;letter-spacing:.2em}
+.pt .lc-brand{font-size:34px;letter-spacing:.16em}
 .pt .lc-badges{display:none}
 .pt .lc-tabs{height:84px}
 .pt .lc-tab{height:70px;font-size:28px}
@@ -446,6 +462,9 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .pt .lc-diff .lc-x{display:none}
 .pt .lc-status{font-size:28px;padding:14px 20px}
 .pt .lc-in{font-size:29px;margin:16px 24px 22px;padding:20px 24px}
+/* the real Liberty engine picker as the Models layer (Anthony: the real card, sharp, beats a redraw) */
+.an-in .pick{display:grid;place-items:center;min-height:0;overflow:hidden}
+.an-in .pick img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;box-shadow:0 0 0 2px #2A2E37}
 /* AN:CSS end */
 /* ===== after the intro ===== */
 .what{padding:clamp(110px,13vw,190px) 0 clamp(80px,9vw,130px)}
@@ -717,17 +736,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   <div class="anat-stage">
     <!-- AN:STACK start --><div class="an-scene" aria-hidden="true"><div class="an-stack"><div class="an-layer" data-k="interface"><div class="an-in lc-slot"></div></div><div class="an-layer" data-k="models"><div class="an-in"><div class="an-lay">
   <div class="hd"><b>Any model</b><span>one brain, every engine</span></div>
-  <div>
-    <div class="models">
-      <div class="md on"><b>Opus 5.5</b><span>everyday</span></div>
-      <div class="md"><b>Sonnet 5.5</b><span>quicker</span></div>
-      <div class="md"><b>Haiku 5.5</b><span>fastest</span></div>
-      <div class="md"><b>Fable 5.1</b><span>deepest</span></div>
-      <div class="md"><b>GPT-6</b><span>second opinion</span></div>
-      <div class="md add"><b>+ next</b><span>new models plug in here</span></div>
-    </div>
-    <div class="eff"><span>LOW</span><span>MEDIUM</span><span class="on">HIGH</span><span>XHIGH</span><span>MAX</span></div>
-  </div></div></div></div>
+  <div class="pick"><img src="media/ui/crops/liberty-launch-1.jpg" alt="" width="1298" height="886" decoding="async"></div></div></div></div>
 <div class="an-layer" data-k="memory"><div class="an-in"><div class="an-lay">
   <div class="hd"><b>The brain</b><span>plain files you own</span></div>
   <div class="cols" style="grid-template-columns:560px 1fr">
@@ -831,14 +840,10 @@ You run the office. Read this first.
 <section id="screens" aria-labelledby="screens-h">
   <div class="sc-stage">
     <div class="sc-head"><h2 class="sr" id="screens-h">Real interfaces</h2><span class="sc-prod">Liberty Cockpit</span><span class="sc-skin">Baseline theme</span><span class="sc-count">1 / 5</span></div>
-    <div class="sc-deck"><figure class="sc" data-open data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-launch.jpg" alt="The real Liberty Cockpit launch card: engine and effort picker, command deck on the left." width="3840" height="2160"><div class="dim"></div><div class="pop has-pc" style="left:31.4%;top:32.8%;width:33.8%;height:41.0%" data-sw="1298"><img alt="" data-src="media/ui/crops/liberty-launch-1.jpg" width="1298" height="886" decoding="async"><div class="pc"><p class="w y">WHO RUNS THIS WINDOW?</p>
-<div class="opt"><div><b>FABLE 5.1</b><span>heavy: night orders, orchestration, the hard calls</span></div><div class="on"><b>OPUS 5.5</b><span>everyday driver</span></div>
-<div><b>SONNET 5.5</b><span>quick and cheaper</span></div><div><b>HAIKU 5.5</b><span>fastest, takes no effort dial</span></div>
-<div><b>ASTRA</b><span>GPT-6 through Codex, live Brain chat</span></div></div>
-<p class="w y">EFFORT</p><p class="eff"><i>LOW</i><i>MEDIUM</i><i class="on">HIGH</i><i>XHIGH</i><i>MAX</i><i>ULTRACODE</i></p><p><b class="go">START</b></p></div></div><!--/pop--><span class="tag">Pick the engine and the effort for each tab</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-chat.jpg" alt="The real Liberty Cockpit chat mid-job: thinking, a helper agent, the quote diff and the live brain." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop has-pc" style="left:13.6%;top:17.6%;width:46.4%;height:14.4%" data-sw="1782"><img alt="" data-src="media/ui/crops/liberty-chat-1.jpg" width="1782" height="311" decoding="async"><div class="pc"><div class="me"><p class="w">MIKE · 6:02 PM</p><p>❯ Quote the Birch Lane job from yesterday's notes.</p></div>
+    <div class="sc-deck"><figure class="sc" data-open data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-launch.jpg" alt="The real Liberty Cockpit launch card: engine and effort picker, command deck on the left." width="3840" height="2160"><div class="dim"></div><div class="pop" style="left:31.4%;top:32.8%;width:33.8%;height:41.0%" data-sw="1298"><img alt="" data-src="media/ui/crops/liberty-launch-1.jpg" width="1298" height="886" decoding="async"></div><!--/pop--><span class="tag">Pick the engine and the effort for each tab</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-chat.jpg" alt="The real Liberty Cockpit chat mid-job: thinking, a helper agent, the quote diff and the live brain." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop has-pc" style="left:13.6%;top:17.6%;width:46.4%;height:14.4%" data-sw="1782"><img alt="" data-src="media/ui/crops/liberty-chat-1.jpg" width="1782" height="311" decoding="async"><div class="pc"><div class="me"><p class="w">MIKE · 6:02 PM</p><p>❯ Quote the Birch Lane job from yesterday's notes.</p></div>
 <p class="w">KEVIN · 6:02 PM</p><div class="bx"><p class="w">KEVIN'S THINKING</p><p>Mike wants the Birch Lane quote. Yesterday's job notes should be in the notes folder. I'll read them, have a helper check the price book for the heater and parts, then write the quote file and a short email to Dana.</p></div></div></div><!--/pop--><div class="pop has-pc" style="left:14.4%;top:42.9%;width:45.5%;height:8.8%" data-sw="1747"><img alt="" data-src="media/ui/crops/liberty-chat-2.jpg" width="1747" height="190" decoding="async"><div class="pc"><p><span class="dia">◇</span> <span class="chip">PRICE-CHECK</span> check the price book for the heater and parts</p>
 <p class="sub">⚙ Grep · 50 gal high-efficiency in price-book.csv</p><p class="sub">Price book: 50 gal high-efficiency gas heater, expansion tank, 3/4 in shutoff valve, haul-away fee. All in stock at the supply house. Labor at the standard half-day rate.</p></div></div><!--/pop--><div class="pop has-pc" style="left:14.4%;top:52.1%;width:45.6%;height:17.1%" data-sw="1751"><img alt="" data-src="media/ui/crops/liberty-chat-3.jpg" width="1751" height="370" decoding="async"><div class="pc"><p><span class="sq"></span><b>± 2026-10-12_birch-lane.md</b></p><p class="sub">halvorsen-plumbing\quotes\ <span class="chip">NEW FILE</span> <span class="g">+14</span> <span class="r">-0</span></p>
-<div class="diff"><p>+ # Quote: 14 Birch Lane</p><p>+ Customer: Dana Whitcomb</p><p>+ Remove leaking 50 gal gas water heater, haul away</p><p>+ Install 50 gal high-efficiency gas water heater</p><p>+ New thermal expansion tank and shutoff valve</p><p>+ Permit, venting check, test and clean-up</p></div><p class="w more">+ 2 MORE LINES</p></div></div><!--/pop--><div class="pop" style="left:85.0%;top:78.4%;width:14.7%;height:17.8%" data-sw="564"><img alt="" data-src="media/ui/crops/liberty-chat-4.jpg" width="564" height="385" decoding="async"></div><!--/pop--><span class="tag">You ask. Kevin thinks out loud.</span><span class="tag">A helper agent checks the price book</span><span class="tag">The quote, written line by line</span><span class="tag">The brain, live</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-perm.jpg" alt="The real permission card: the full email to the customer, with Allow once or No." width="3840" height="2160" loading=lazy><div class="dim"></div><span class="tag solo">It asks before it sends anything</span></figure><figure class="sc" data-prod="Money Engine" data-skin="Witch's Lab skin"><img src="media/ui/desk-witch-tabs.jpg" alt="A second custom interface: agent tabs, a diff and the finished quote." width="3840" height="2160" loading=lazy><div class="dim"></div></figure><figure class="sc" data-prod="Game Lab" data-skin="PS2 menu theme"><img src="media/ui/gamelab-session.jpg" alt="A third custom interface: a Claude Code terminal with quick moves and a notebook." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop has-pc" style="left:13.4%;top:7.0%;width:31.4%;height:74.0%" data-sw="1205"><img alt="" data-src="media/ui/crops/gamelab-session-1.jpg" width="1205" height="1599" decoding="async"><div class="pc gl"><div class="wb"><p><b>✻ Welcome to Claude Code!</b></p><p class="sub">cwd: C:\Lab\game-lab</p></div>
+<div class="diff"><p>+ # Quote: 14 Birch Lane</p><p>+ Customer: Dana Whitcomb</p><p>+ Remove leaking 50 gal gas water heater, haul away</p><p>+ Install 50 gal high-efficiency gas water heater</p><p>+ New thermal expansion tank and shutoff valve</p><p>+ Permit, venting check, test and clean-up</p></div><p class="w more">+ 2 MORE LINES</p></div></div><!--/pop--><div class="pop" style="left:85.0%;top:78.4%;width:14.7%;height:17.8%" data-sw="564"><img alt="" data-src="media/ui/crops/liberty-chat-4.jpg" width="564" height="385" decoding="async"><svg class="live" viewBox="0 0 564 385" preserveAspectRatio="none" aria-hidden="true"><path id="bt0" d="M255 218C300 211 350 210 385 222S412 248 390 268" fill="none"/><path class="tr" d="M255 218C300 211 350 210 385 222S412 248 390 268" pathLength="100" style="animation-delay:0.00s"/><circle class="hd" r="4" opacity="0"><animateMotion dur="3.4s" begin="0.00s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.62;1" calcMode="linear"><mpath href="#bt0"/></animateMotion><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.6;.63;1" dur="3.4s" begin="0.00s" repeatCount="indefinite"/></circle><path id="bt1" d="M178 168C230 122 330 110 402 152" fill="none"/><path class="tr" d="M178 168C230 122 330 110 402 152" pathLength="100" style="animation-delay:1.15s"/><circle class="hd" r="4" opacity="0"><animateMotion dur="3.4s" begin="1.15s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.62;1" calcMode="linear"><mpath href="#bt1"/></animateMotion><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.6;.63;1" dur="3.4s" begin="1.15s" repeatCount="indefinite"/></circle><path id="bt2" d="M142 246C192 272 252 292 334 284" fill="none"/><path class="tr" d="M142 246C192 272 252 292 334 284" pathLength="100" style="animation-delay:2.30s"/><circle class="hd" r="4" opacity="0"><animateMotion dur="3.4s" begin="2.30s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.62;1" calcMode="linear"><mpath href="#bt2"/></animateMotion><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.6;.63;1" dur="3.4s" begin="2.30s" repeatCount="indefinite"/></circle><path id="bt3" d="M412 192C362 176 282 176 212 202" fill="none"/><path class="tr" d="M412 192C362 176 282 176 212 202" pathLength="100" style="animation-delay:3.45s"/><circle class="hd" r="4" opacity="0"><animateMotion dur="3.4s" begin="3.45s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.62;1" calcMode="linear"><mpath href="#bt3"/></animateMotion><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.6;.63;1" dur="3.4s" begin="3.45s" repeatCount="indefinite"/></circle></svg></div><!--/pop--><span class="tag">You ask. Kevin thinks out loud.</span><span class="tag">A helper agent checks the price book</span><span class="tag">The quote, written line by line</span><span class="tag">The brain, live</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-perm.jpg" alt="The real permission card: the full email to the customer, with Allow once or No." width="3840" height="2160" loading=lazy><div class="dim"></div><span class="tag solo">It asks before it sends anything</span></figure><figure class="sc" data-prod="Money Engine" data-skin="Witch's Lab skin"><img src="media/ui/desk-witch-tabs.jpg" alt="A second custom interface: agent tabs, a diff and the finished quote." width="3840" height="2160" loading=lazy><div class="dim"></div></figure><figure class="sc" data-prod="Game Lab" data-skin="PS2 menu theme"><img src="media/ui/gamelab-session.jpg" alt="A third custom interface: a Claude Code terminal with quick moves and a notebook." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop has-pc" style="left:13.4%;top:7.0%;width:31.4%;height:74.0%" data-sw="1205"><img alt="" data-src="media/ui/crops/gamelab-session-1.jpg" width="1205" height="1599" decoding="async"><div class="pc gl"><div class="wb"><p><b>✻ Welcome to Claude Code!</b></p><p class="sub">cwd: C:\Lab\game-lab</p></div>
 <p>&gt; Read STATUS.md and catch me up in plain English.</p><p><span class="dot">●</span> <b>Read</b>(STATUS.md) <span class="sub">· 54 lines</span><br><span class="dot">●</span> <b>Read</b>(CLAUDE.md) <span class="sub">· 88 lines</span></p>
 <p><span class="dot">●</span> Here is where the lab stands.</p><p class="ind"><b>Cave Runner</b> runs in the browser now. Level 1 and 2 play clean at 60 fps, level 3 drops frames when the lava sprites stack.</p>
 <p><span class="dot">●</span> <b>Update Todos</b></p><p class="ind">☑ Read the lab status<br>■ Profile level 3 of Cave Runner<br>☐ Match the Star Courier sound routine</p></div></div><!--/pop--><div class="pop" style="left:0.5%;top:6.6%;width:11.9%;height:27.6%" data-sw="457"><img alt="" data-src="media/ui/crops/gamelab-session-2.jpg" width="457" height="596" decoding="async"></div><!--/pop--><span class="tag">A real Claude Code terminal</span><span class="tag">One-click moves for repeat jobs</span></figure></div>
@@ -867,11 +872,11 @@ You run the office. Read this first.
 <section id="themes" aria-labelledby="themes-h">
   <div class="th-stage">
     <div class="th-copy">
-      <h2 class="display" id="themes-h">One cockpit.<br>Seven looks.</h2>
+      <h2 class="display" id="themes-h">One cockpit.<br>Five looks.</h2>
       <p class="lead">Same app, same brain, same work. Pick a theme or have one built in your brand colors.</p>
-      <ol class="swatches"><li class="sw" data-i="0" style="--bg:#0b0b0d;--pn:#1c1c1f;--ac:#d9a53a;--tx:#e8e6df"><button type="button" aria-label="Show the Baseline theme"><span class="chips"><i style="background:#0b0b0d"></i><i style="background:#1c1c1f"></i><i style="background:#d9a53a"></i><i style="background:#e8e6df"></i></span><b>Baseline</b><small>The default. Gold on graphite.</small></button></li><li class="sw" data-i="1" style="--bg:#0c172a;--pn:#16243a;--ac:#c9a44a;--tx:#fce484"><button type="button" aria-label="Show the Liberty theme"><span class="chips"><i style="background:#0c172a"></i><i style="background:#16243a"></i><i style="background:#c9a44a"></i><i style="background:#fce484"></i></span><b>Liberty</b><small>Navy and gold, the company colors.</small></button></li><li class="sw" data-i="2" style="--bg:#040a17;--pn:#0a1529;--ac:#fccc3c;--tx:#ffffff"><button type="button" aria-label="Show the Topcoat theme"><span class="chips"><i style="background:#040a17"></i><i style="background:#0a1529"></i><i style="background:#fccc3c"></i><i style="background:#ffffff"></i></span><b>Topcoat</b><small>The epoxy-floor flagship look.</small></button></li><li class="sw" data-i="3" style="--bg:#060c14;--pn:#0f232a;--ac:#3cb4cc;--tx:#9cfcfc"><button type="button" aria-label="Show the Jarvis theme"><span class="chips"><i style="background:#060c14"></i><i style="background:#0f232a"></i><i style="background:#3cb4cc"></i><i style="background:#9cfcfc"></i></span><b>Jarvis</b><small>Cyan heads-up display.</small></button></li><li class="sw" data-i="4" style="--bg:#040a06;--pn:#0c1911;--ac:#3ce484;--tx:#b8f5cc"><button type="button" aria-label="Show the Phosphor theme"><span class="chips"><i style="background:#040a06"></i><i style="background:#0c1911"></i><i style="background:#3ce484"></i><i style="background:#b8f5cc"></i></span><b>Phosphor</b><small>Green terminal glass.</small></button></li><li class="sw" data-i="5" style="--bg:#12150c;--pn:#1e2316;--ac:#e4b46c;--tx:#b4fcb4"><button type="button" aria-label="Show the COD4 theme"><span class="chips"><i style="background:#12150c"></i><i style="background:#1e2316"></i><i style="background:#e4b46c"></i><i style="background:#b4fcb4"></i></span><b>COD4</b><small>Field ops, olive and sand.</small></button></li><li class="sw" data-i="6" style="--bg:#efefec;--pn:#dfddd6;--ac:#cc9c3c;--tx:#2a2a2a"><button type="button" aria-label="Show the Concrete theme"><span class="chips"><i style="background:#efefec"></i><i style="background:#dfddd6"></i><i style="background:#cc9c3c"></i><i style="background:#2a2a2a"></i></span><b>Concrete</b><small>The light one, for daytime.</small></button></li></ol>
+      <ol class="swatches"><li class="sw" data-i="0" style="--bg:#0b0b0d;--pn:#1c1c1f;--ac:#d9a53a;--tx:#e8e6df"><button type="button" aria-label="Show the Baseline theme"><span class="chips"><i style="background:#0b0b0d"></i><i style="background:#1c1c1f"></i><i style="background:#d9a53a"></i><i style="background:#e8e6df"></i></span><b>Baseline</b><small>The default. Gold on graphite.</small></button></li><li class="sw" data-i="1" style="--bg:#060c14;--pn:#0f232a;--ac:#3cb4cc;--tx:#9cfcfc"><button type="button" aria-label="Show the Jarvis theme"><span class="chips"><i style="background:#060c14"></i><i style="background:#0f232a"></i><i style="background:#3cb4cc"></i><i style="background:#9cfcfc"></i></span><b>Jarvis</b><small>Cyan heads-up display.</small></button></li><li class="sw" data-i="2" style="--bg:#040a06;--pn:#0c1911;--ac:#3ce484;--tx:#b8f5cc"><button type="button" aria-label="Show the Phosphor theme"><span class="chips"><i style="background:#040a06"></i><i style="background:#0c1911"></i><i style="background:#3ce484"></i><i style="background:#b8f5cc"></i></span><b>Phosphor</b><small>Green terminal glass.</small></button></li><li class="sw" data-i="3" style="--bg:#12150c;--pn:#1e2316;--ac:#e4b46c;--tx:#b4fcb4"><button type="button" aria-label="Show the COD4 theme"><span class="chips"><i style="background:#12150c"></i><i style="background:#1e2316"></i><i style="background:#e4b46c"></i><i style="background:#b4fcb4"></i></span><b>COD4</b><small>Field ops, olive and sand.</small></button></li><li class="sw" data-i="4" style="--bg:#efefec;--pn:#dfddd6;--ac:#cc9c3c;--tx:#2a2a2a"><button type="button" aria-label="Show the Concrete theme"><span class="chips"><i style="background:#efefec"></i><i style="background:#dfddd6"></i><i style="background:#cc9c3c"></i><i style="background:#2a2a2a"></i></span><b>Concrete</b><small>The light one, for daytime.</small></button></li></ol>
     </div>
-    <div class="th-frame"><img class="tl" data-i="0" src="media/ui/theme-baseline.jpg" alt="Liberty Cockpit in the Baseline theme" width="3200" height="1800"><img class="tl" data-i="1" src="media/ui/theme-liberty.jpg" alt="Liberty Cockpit in the Liberty theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="2" src="media/ui/theme-topcoat.jpg" alt="Liberty Cockpit in the Topcoat theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="3" src="media/ui/theme-jarvis.jpg" alt="Liberty Cockpit in the Jarvis theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="4" src="media/ui/theme-phosphor.jpg" alt="Liberty Cockpit in the Phosphor theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="5" src="media/ui/theme-cod4-2.jpg" alt="Liberty Cockpit in the COD4 theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="6" src="media/ui/theme-concrete.jpg" alt="Liberty Cockpit in the Concrete theme" width="3200" height="1800" loading=lazy><span class="th-name" aria-hidden="true">Baseline</span></div>
+    <div class="th-frame"><img class="tl" data-i="0" src="media/ui/theme-baseline.jpg" alt="Liberty Cockpit in the Baseline theme" width="3200" height="1800"><img class="tl" data-i="1" src="media/ui/theme-jarvis.jpg" alt="Liberty Cockpit in the Jarvis theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="2" src="media/ui/theme-phosphor.jpg" alt="Liberty Cockpit in the Phosphor theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="3" src="media/ui/theme-cod4-2.jpg" alt="Liberty Cockpit in the COD4 theme" width="3200" height="1800" loading=lazy><img class="tl" data-i="4" src="media/ui/theme-concrete.jpg" alt="Liberty Cockpit in the Concrete theme" width="3200" height="1800" loading=lazy><span class="th-name" aria-hidden="true">Baseline</span></div>
   </div>
 </section>
 
@@ -1201,7 +1206,7 @@ tool = call[<span class="s">"tool_name"</span>]
     var inn=document.createElement('div');inn.className='an-in';KV_CHAT(inn);rv.textContent='';rv.appendChild(inn);
     function fit(){var pt=innerWidth/innerHeight<.9,LW=pt?540:1920,LH=pt?650:1080,f=Math.min(innerWidth/LW,(innerHeight-68)/LH);
       rv.classList.toggle('pt',pt);rv.style.width=LW*f+'px';rv.style.height=LH*f+'px';rv.style.aspectRatio='auto';rv.style.marginTop='68px';
-      inn.style.transformOrigin='0 0';inn.style.transform='scale('+f+')'}
+      inn.style.transformOrigin='0 0';inn.style.transform='scale('+(pt?f/2:f)+')'}
     fit();addEventListener('resize',fit);
   })();
   // live bits on every coded chat: the spinner and the job timer
@@ -1335,8 +1340,9 @@ tool = call[<span class="s">"tool_name"</span>]
         if(mob){
           // phones: the close-up sits whole over the dimmed screen; wide ones are coded cards (.pc), so nothing is ever cut
           var maxW=innerWidth*.92,maxH=f.parentNode.clientHeight-96,pc=el.querySelector('.pc');
-          if(pc){W=maxW;el.style.width=W+'px';el.style.height='auto';pc.style.zoom='';H=el.offsetHeight;
-            if(H>maxH){pc.style.zoom=(maxH/H).toFixed(3);H=Math.min(el.offsetHeight,maxH)}}   // short screens: shrink the card, never cut it
+          if(pc){W=maxW;el.style.width=W+'px';el.style.height='auto';pc.style.width='';pc.style.height='';pc.style.transform='';H=el.offsetHeight;
+            if(H>maxH){var k=maxH/H,H2=H;for(var n=0;n<3;n++){pc.style.width=(W/k)+'px';H2=pc.offsetHeight;k=Math.min(k,maxH/H2)}   // short screens: shrink the card, never cut it
+              pc.style.height=H2+'px';pc.style.transformOrigin='0 0';pc.style.transform='scale('+k.toFixed(4)+')';H=H2*k}}
           else{var s0=Math.min(maxW/rw,maxH/rh,sw/1.5/rw);W=rw*s0;H=rh*s0}
           cy=fh/2-26;
         }else{var s1=Math.min(innerWidth*.84/rw,innerHeight*.62/rh,sw/1.5/rw);W=rw*s1;H=rh*s1;cy=fh*.45}
@@ -1387,7 +1393,7 @@ tool = call[<span class="s">"tool_name"</span>]
 
 
 
-    // Themes: scroll re-skins one cockpit through seven looks; the section takes on each theme's color
+    // Themes: scroll re-skins one cockpit through five looks; the section takes on each theme's color
     (function(){
       var sec=document.getElementById('themes');if(!sec)return;
       var imgs=[].slice.call(sec.querySelectorAll('.tl')),sws=[].slice.call(sec.querySelectorAll('.sw')),nm=sec.querySelector('.th-name');
@@ -1419,6 +1425,6 @@ tool = call[<span class="s">"tool_name"</span>]
   });
 })();
 </script>
-<script>(function(){if(document.documentElement.classList.contains('static'))return;var a=document.getElementById('anatomy');new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();import('./js/anatomy.js?v=ft7')},{rootMargin:'1500px 0px'}).observe(a)})();</script>
+<script>(function(){if(document.documentElement.classList.contains('static'))return;var a=document.getElementById('anatomy');new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();import('./js/anatomy.js?v=ft8')},{rootMargin:'1500px 0px'}).observe(a)})();</script>
 </body>
 </html>

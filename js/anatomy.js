@@ -6,6 +6,7 @@ const section = document.getElementById('anatomy');
 const stack = section.querySelector('.an-stack');
 const layers = [...stack.querySelectorAll('.an-layer')];
 const labels = [...section.querySelectorAll('.alabel')];
+const alabels = section.querySelector('.alabels');
 const intro = section.querySelector('.anat-intro');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -29,12 +30,14 @@ function init() {
     LW = pt ? 540 : 1920; LH = pt ? 650 : 1080;
     fit = Math.min(innerWidth / LW, (innerHeight - 68) / LH);          // cover: the screen below the nav, same as the KEVIN reveal
     if (pt) {
-      const labH = Math.max(0, ...labels.map(l => l.offsetHeight)) + 24;
-      const top = 78, bottom = innerHeight - labH - 18;                  // the space between the nav and the label
-      faceF = Math.min(innerWidth * .94 / LW, (bottom - top) / LH);
-      faceX = 0; faceY = (top + bottom) / 2 - innerHeight / 2;
+      const labH = Math.max(0, ...labels.map(l => l.offsetHeight)), gap = 18;
+      faceF = Math.min(innerWidth * .94 / LW, (innerHeight - 78 - gap - labH - 22) / LH);
+      const layerH = LH * faceF, top = Math.max(78, (innerHeight - layerH - gap - labH) / 2 + 20);   // layer + caption, centered as one group
+      faceX = 0; faceY = top + layerH / 2 - innerHeight / 2;
+      if (alabels) alabels.style.bottom = Math.max(12, innerHeight - (top + layerH + gap + labH)) + 'px';
       overF = fit * .62;
     } else {
+      if (alabels) alabels.style.bottom = '';
       faceF = Math.min(innerWidth * .58 / LW, (innerHeight - 150) / LH);
       const gut = Math.min(56, Math.max(20, innerWidth * .04));
       faceX = (innerWidth - gut - LW * faceF / 2) - innerWidth / 2;     // right side; the labels own the left
