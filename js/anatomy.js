@@ -24,26 +24,34 @@ function init() {
   layers.forEach((el, i) => { el.style.zIndex = N - i; });          // front-to-back order even where a browser flattens 3D
   let pt = false, LW = 1920, LH = 1080, fit = 1, faceF = 1, overF = 1, faceX = 0, faceY = 0;
 
+  // Layout is measured from the pinned stage itself (not the window): on a real iPhone the window grows when Safari's
+  // toolbar hides, and centering on the window pushed everything to the top.
+  const stageEl = section.querySelector('.anat-stage');
+  let SH = 0, labTop = 0;
   function measure() {
-    pt = innerWidth / innerHeight < .9;
+    SH = stageEl.clientHeight || innerHeight;
+    const SW = stageEl.clientWidth || innerWidth;
+    pt = SW / SH < .9;
     stack.classList.toggle('pt', pt);
     LW = pt ? 540 : 1920; LH = pt ? 650 : 1080;
-    fit = Math.min(innerWidth / LW, (innerHeight - 68) / LH);          // cover: the screen below the nav, same as the KEVIN reveal
+    fit = Math.min(SW / LW, (SH - 68) / LH);                            // cover: the screen below the nav, same as the KEVIN reveal
+    const labH = Math.max(0, ...labels.map(l => l.offsetHeight));
     if (pt) {
-      const labH = Math.max(0, ...labels.map(l => l.offsetHeight)), gap = 18;
-      faceF = Math.min(innerWidth * .94 / LW, (innerHeight - 78 - gap - labH - 22) / LH);
-      const layerH = LH * faceF, top = Math.max(78, (innerHeight - layerH - gap - labH) / 2 + 20);   // layer + caption, centered as one group
-      faceX = 0; faceY = top + layerH / 2 - innerHeight / 2;
-      if (alabels) alabels.style.bottom = Math.max(12, innerHeight - (top + layerH + gap + labH)) + 'px';
+      const gap = 20, top0 = 76, avail = SH - 18 - top0;
+      faceF = Math.min(SW * .9 / LW, (avail - gap - labH) * .9 / LH);   // breathing room: the group never touches the edges
+      const layerH = LH * faceF, top = top0 + Math.max(0, (avail - layerH - gap - labH) / 2);
+      faceX = 0; faceY = top + layerH / 2 - SH / 2;                      // layer + caption centered as one group
+      labTop = top + layerH + gap;                                       // every caption starts on the same line
       overF = fit * .62;
     } else {
-      if (alabels) alabels.style.bottom = '';
-      faceF = Math.min(innerWidth * .58 / LW, (innerHeight - 150) / LH);
-      const gut = Math.min(56, Math.max(20, innerWidth * .04));
-      faceX = (innerWidth - gut - LW * faceF / 2) - innerWidth / 2;     // right side; the labels own the left
+      faceF = Math.min(SW * .58 / LW, (SH - 150) / LH);
+      const gut = Math.min(56, Math.max(20, SW * .04));
+      faceX = (SW - gut - LW * faceF / 2) - SW / 2;                      // right side; the captions own the left
       faceY = 20;
+      labTop = SH / 2 + faceY - labH / 2;                                // caption block centered on the layer, tops aligned
       overF = fit * .5;
     }
+    if (alabels) { alabels.style.top = labTop + 'px'; alabels.style.bottom = 'auto'; }
   }
 
   // pointer parallax (desktop), smoothed in the frame loop
@@ -54,6 +62,7 @@ function init() {
   const clamp = v => Math.max(0, Math.min(1, v));
   let last = '';
   function render() {
+    if (stageEl.clientHeight !== SH) { measure(); last = ''; }       // toolbar shown or hidden: re-center
     P.x += (P.tx - P.x) * .08; P.y += (P.ty - P.y) * .08;
     const k = S.tour * S.tour * (3 - 2 * S.tour);                       // eased blend: overview -> square-on tour
     const f = lerp(lerp(fit, overF, S.tilt), faceF, k);
@@ -62,7 +71,7 @@ function init() {
     const G = S.gap * LH * .3;                                         // spacing between layers (layer px)
     const zc = k * S.u * (G + 1);
     const ty0 = 34 * (1 - S.tilt) * (1 - k);                           // cover centered in the space under the nav
-    const tx = faceX * k, ty = ty0 + faceY * k + (pt ? -innerHeight * .04 : innerHeight * .02) * free;
+    const tx = faceX * k, ty = ty0 + faceY * k + (pt ? -SH * .04 : SH * .02) * free;
     const key = [f, rx, rz, G, zc, tx, ty, S.u, S.edges].map(v => v.toFixed(3)).join();
     if (key === last) return; last = key;
     stack.style.transform = `translate3d(${tx}px,${ty}px,0) scale3d(${f},${f},${f}) rotateX(${rx}deg) rotateZ(${rz}deg) translate3d(0,0,${zc}px)`;
@@ -104,7 +113,7 @@ function init() {
   (function frame() { requestAnimationFrame(frame); if (visible) render(); })();
 
   // one chat, not two: the stage shows only once it pins over the intro's last frame, and the intro scene steps aside
-  const stage = section.querySelector('.anat-stage'), scene = document.querySelector('#intro .scene');
+  const stage = stageEl, scene = document.querySelector('#intro .scene');
   const swap = on => { stage.style.opacity = on ? '' : '0'; if (scene) scene.style.opacity = on ? '0' : ''; };   // opacity: children can't override it
   const hand = ScrollTrigger.create({ trigger: section, start: 'top top', onEnter: () => swap(true), onLeaveBack: () => swap(false),
     onRefresh: self => swap(self.scroll() >= self.start - 1) });
