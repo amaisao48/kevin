@@ -24,7 +24,7 @@ html.lenis,html.lenis body{height:auto}
 body{background:var(--bg);color:var(--text);font:400 18px/1.55 Archivo,system-ui,sans-serif;font-stretch:100%;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:90;background:url(media/grain.png);opacity:.055;mix-blend-mode:overlay}
 @media (max-width:900px),(pointer:coarse){body::after{display:none}.nav.solid{-webkit-backdrop-filter:none;backdrop-filter:none;background:#07080B}}
-#stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0}
+#stars{position:fixed;left:0;top:0;width:100vw;height:100vh;height:100lvh;z-index:0;pointer-events:none;opacity:0}
 main,footer{position:relative;z-index:1}
 ::selection{background:var(--accent);color:#07080B}
 img,video{display:block;max-width:100%}
@@ -135,7 +135,7 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .anat-static #anat,.anat-static .anat-intro,.static .anat-intro{display:none}
 .anat-static .alabels,.static .alabels{position:relative;left:auto;bottom:auto;margin:0 auto;padding:0 var(--gut);width:auto;max-width:900px}
 .anat-static .alabel,.static .alabel{position:relative;opacity:1;transform:none;margin-bottom:48px}
-@media (max-width:700px){.alabels{bottom:28px}.alabel p{font-size:15px}}
+@media (max-width:700px){.alabels{bottom:18px}.alabel .n{font-size:12px}.alabel h3{font-size:25px;margin-top:10px}.alabel p{font-size:14px;margin-top:8px;line-height:1.45}}
 
 
 
@@ -159,6 +159,40 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .sc .lines .r{stroke-width:2}
 .sc .tag{position:absolute;left:50%;bottom:-14px;translate:-50% 100%;translate:-50% 0;z-index:3;opacity:0;transform:translateY(8px);background:var(--accent);color:#07080B;font:700 clamp(12px,1vw,15px)/1.2 Archivo;font-stretch:104%;padding:9px 12px;white-space:nowrap;box-shadow:0 12px 30px -10px rgba(0,0,0,.8)}
 .sc .tag.solo{top:calc(100% + 14px);bottom:auto}
+.sc .pop .pc{display:none}
+@media (max-width:700px){.sc .pop.has-pc img{display:none}.sc .pop .pc{display:block}}
+.pc{position:relative;height:100%;overflow:hidden;background:#0A0A0B;box-shadow:inset 0 0 0 1px #3a3a3a;padding:12px 14px;font:400 12.5px/1.5 Mono,ui-monospace,monospace;color:#D8D5CE;text-align:left}
+.pc>*+*{margin-top:8px}
+.pc .w{font-size:10px;letter-spacing:.22em;color:#9A978F}
+.pc .y{color:#E9B44C}
+.pc .sub{color:#A9A59D}
+.pc b{font-weight:400;color:#F4F2EC}
+.pc .me{border-left:3px solid #E8E8E8;background:#141414;padding:8px 10px}
+.pc .me p+p{font-size:13.5px;color:#F2F0EA;margin-top:4px}
+.pc .bx{box-shadow:inset 0 0 0 1px #3F3F3F;padding:8px 10px}
+.pc .bx p+p{margin-top:4px}
+.pc .chip{font-size:10px;letter-spacing:.12em;padding:2px 6px;box-shadow:inset 0 0 0 1px #6A6A6A;color:#ECE9E2;white-space:nowrap}
+.pc .dia{color:#E9B44C}
+.pc .sq{display:inline-block;width:8px;height:8px;background:#E9B44C;margin-right:6px}
+.pc .g{color:#4FB84F}.pc .r{color:#D0564A}
+.pc .diff{background:#0B180B;color:#B9EFD3;padding:6px 14px;margin-left:-14px;margin-right:-14px}
+.pc .opt{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pc .opt div{box-shadow:inset 0 0 0 1px #3a3a3a;padding:7px 8px}
+.pc .opt .on{box-shadow:inset 0 0 0 1px #E9B44C;background:#1C1912}
+.pc .opt b{display:block;font-size:11.5px;letter-spacing:.1em}
+.pc .opt .on b{color:#E9B44C}
+.pc .opt span{display:block;font-size:10.5px;line-height:1.35;color:#9A978F;margin-top:2px}
+.pc .eff{display:flex;flex-wrap:wrap;gap:5px}
+.pc .eff i{font-style:normal;font-size:10px;letter-spacing:.1em;padding:3px 6px;box-shadow:inset 0 0 0 1px #3a3a3a}
+.pc .eff i.on{box-shadow:inset 0 0 0 1px #E9B44C;color:#E9B44C}
+.pc .go{display:inline-block;background:#FFC85A;color:#111;font-size:11px;letter-spacing:.16em;padding:5px 14px}
+.pc.gl{background:#071233;box-shadow:inset 0 0 0 1px #2B4285;color:#D6DEFF}
+.pc.gl .wb{box-shadow:inset 0 0 0 1px #E8D9A0;padding:7px 9px}
+.pc.gl .sub{color:#8C9BC8}
+.pc.gl .dot{color:#5FD39B}
+.pc.gl .ind{padding-left:14px}
+.pc.gl .cur{display:inline-block;width:7px;height:13px;background:#D6DEFF;vertical-align:-2px;animation:lcblink 1.1s steps(1) infinite}
+
 .sc-note{font:400 12px/1 Mono,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);text-align:right}
 .static #screens{height:auto}
 .static .sc-stage{position:relative;height:auto;display:block}
@@ -233,13 +267,13 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 /* AN:CSS start: KEVIN layer by layer, coded layers in CSS 3D (built by _tools/ft_anatomy.py) */
 .an-scene{position:absolute;inset:0;perspective:2200px;perspective-origin:50% 42%;overflow:hidden}
 .an-stack{position:absolute;left:50%;top:50%;width:1920px;height:1080px;margin:-540px 0 0 -960px;transform-style:preserve-3d;transform-origin:50% 50%}
-.an-stack.pt{width:540px;height:800px;margin:-400px 0 0 -270px}
+.an-stack.pt{width:540px;height:650px;margin:-325px 0 0 -270px}
 .an-layer{position:absolute;inset:0;transform-origin:50% 50%;backface-visibility:hidden;background:#0B0D11;color:#E8EAEF;overflow:hidden;contain:layout paint}
 .an-layer::before{content:'';position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 3px var(--ec,#4a505c);opacity:var(--edge,0)}
 .an-layer::after{content:'';position:absolute;inset:0;z-index:4;pointer-events:none;background:#05060A;opacity:var(--dim,0)}
 .an-layer[data-k="interface"]{--ec:#FFD23F}
 .an-in{position:absolute;left:0;top:0;width:1920px;height:1080px}
-.pt .an-in{width:1080px;height:1600px;zoom:.5}
+.pt .an-in{width:1080px;height:1300px;zoom:.5}
 .anat-static .an-scene,.static .an-scene{display:none}
 
 /* shared layer parts (from the old layer artwork, now live code) */
@@ -382,6 +416,36 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .pt .lc-in{font-size:32px;margin:20px 24px 28px;padding:24px 28px}
 .pt .lc-in .btns b.stop{font-size:26px}
 .pt .lc-wide{display:none}
+/* portrait v2 (2026-10-12): a shorter 1080x1300 design so short iPhone screens get bigger type; nothing cut or overlapping */
+.pt .an-lay{padding:52px 48px}
+.pt .an-in .hd{gap:10px;margin-bottom:28px;padding-bottom:20px}
+.pt .an-in .hd b{font-size:58px}
+.pt .an-in .hd span{font-size:24px}
+.pt .an-in .cols{gap:26px}
+.pt .an-in .panel{padding:28px 30px}
+.pt .an-in .panel h4{font-size:24px;margin-bottom:16px}
+.pt .an-in .md{height:212px;padding:30px}
+.pt .an-in .models{gap:22px}
+.pt .an-in .eff{margin-top:28px}
+.pt .an-in .ltree{font-size:30px;line-height:1.45}
+.pt .an-in pre{font-size:27px;line-height:1.42}
+.pt .an-in .wide-only{display:none}
+.pt .an-in .row{font-size:32px;padding:18px 0}
+.pt .an-in .ltl{height:330px;margin-top:40px}
+.pt .an-in .tick{top:262px}
+.pt .an-in .log div{font-size:29px;padding:17px 0}
+.pt .an-in .ltag{font-size:23px;padding:8px 10px}
+.pt .lc-top{height:104px;padding:0 40px}
+.pt .lc-brand{font-size:40px;letter-spacing:.2em}
+.pt .lc-badges{display:none}
+.pt .lc-tabs{height:84px}
+.pt .lc-tab{height:70px;font-size:28px}
+.pt .lc-ph{display:none}
+.pt .lc-me p+p{font-size:34px}
+.pt .lc-box p+p{font-size:29px;line-height:1.4}
+.pt .lc-diff .lc-x{display:none}
+.pt .lc-status{font-size:28px;padding:14px 20px}
+.pt .lc-in{font-size:29px;margin:16px 24px 22px;padding:20px 24px}
 /* AN:CSS end */
 /* ===== after the intro ===== */
 .what{padding:clamp(110px,13vw,190px) 0 clamp(80px,9vw,130px)}
@@ -588,10 +652,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <div class="lc-tool lc-read"><p><i class="sq"></i><b>Read</b> <u>notes\2026-10-11_birch-lane.txt</u></p><p class="lc-sub">└ Notes from yesterday, Birch Lane (Dana Whitcomb) · 5 lines</p></div>
       <div class="lc-tool"><p><i class="dia">◇</i><span class="lc-chip">PRICE-CHECK</span>check the price book for the heater and parts</p><p class="lc-sub lc-hide">⚙ Grep · 50 gal high-efficiency in price-book.csv</p></div>
       <div class="lc-tool"><p><i class="sq y"></i><b>± 2026-10-12_birch-lane.md</b> <span class="lc-dim lc-wide">halvorsen-plumbing\quotes\</span> <span class="lc-chip">NEW FILE</span><span class="lc-pm"><span class="g">+14</span> <span class="r">-0</span></span></p>
-<div class="lc-diff">+ # Quote: 14 Birch Lane
-+ Customer: Dana Whitcomb
-+ Install 50 gal high-efficiency gas water heater
-+ New thermal expansion tank and shutoff valve</div><p class="lc-more">+ 6 MORE LINES</p></div>
+<div class="lc-diff"><div>+ # Quote: 14 Birch Lane</div><div class="lc-x">+ Customer: Dana Whitcomb</div><div>+ Install 50 gal high-efficiency gas water heater</div><div class="lc-x">+ New thermal expansion tank and shutoff valve</div></div><p class="lc-more">+ 6 MORE LINES</p></div>
     </div>
     <div class="lc-status"><span class="sp">⠋</span><span class="st">step 3 · writing the quote</span><span class="lc-dim">Plumbing…</span><span class="rt"><span class="lc-sec">42</span>s ↓ 2.3k tokens · ESC or STOP to interrupt</span></div>
     <div class="lc-in"><span>❯ Talk to Kevin in QUOTES<span class="cur"></span></span><span class="btns"><b>MIC</b><b>VOICE OFF</b><b>ASK FIRST</b><b class="stop">STOP</b></span></div>
@@ -692,9 +753,9 @@ You run the office. Read this first.
 3. Lessons get written down
    the day they happen.
 
-<span class="c">## LESSONS (newest)</span>
+<span class="wide-only"><span class="c">## LESSONS (newest)</span>
 <span class="c">- Oct 12:</span> Dana prefers texts
-  after 5 PM.</pre></div>
+  after 5 PM.</span></pre></div>
   </div></div></div></div>
 <div class="an-layer" data-k="skills"><div class="an-in"><div class="an-lay">
   <div class="hd"><b>Skills and robots</b><span>the repeat work</span></div>
@@ -770,7 +831,17 @@ You run the office. Read this first.
 <section id="screens" aria-labelledby="screens-h">
   <div class="sc-stage">
     <div class="sc-head"><h2 class="sr" id="screens-h">Real interfaces</h2><span class="sc-prod">Liberty Cockpit</span><span class="sc-skin">Baseline theme</span><span class="sc-count">1 / 5</span></div>
-    <div class="sc-deck"><figure class="sc" data-open data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-launch.jpg" alt="The real Liberty Cockpit launch card: engine and effort picker, command deck on the left." width="3840" height="2160"><div class="dim"></div><div class="pop" style="left:31.4%;top:32.8%;width:33.8%;height:41.0%" data-sw="1298"><img alt="" data-src="media/ui/crops/liberty-launch-1.jpg" width="1298" height="886" decoding="async"></div><span class="tag">Pick the engine and the effort for each tab</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-chat.jpg" alt="The real Liberty Cockpit chat mid-job: thinking, a helper agent, the quote diff and the live brain." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop" style="left:13.6%;top:17.6%;width:46.4%;height:14.4%" data-sw="1782"><img alt="" data-src="media/ui/crops/liberty-chat-1.jpg" width="1782" height="311" decoding="async"></div><div class="pop" style="left:14.4%;top:42.9%;width:45.5%;height:8.8%" data-sw="1747"><img alt="" data-src="media/ui/crops/liberty-chat-2.jpg" width="1747" height="190" decoding="async"></div><div class="pop" style="left:14.4%;top:52.1%;width:45.6%;height:17.1%" data-sw="1751"><img alt="" data-src="media/ui/crops/liberty-chat-3.jpg" width="1751" height="370" decoding="async"></div><div class="pop" style="left:85.0%;top:78.4%;width:14.7%;height:17.8%" data-sw="564"><img alt="" data-src="media/ui/crops/liberty-chat-4.jpg" width="564" height="385" decoding="async"></div><span class="tag">You ask. Kevin thinks out loud.</span><span class="tag">A helper agent checks the price book</span><span class="tag">The quote, written line by line</span><span class="tag">The brain, live</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-perm.jpg" alt="The real permission card: the full email to the customer, with Allow once or No." width="3840" height="2160" loading=lazy><div class="dim"></div><span class="tag solo">It asks before it sends anything</span></figure><figure class="sc" data-prod="Money Engine" data-skin="Witch's Lab skin"><img src="media/ui/desk-witch-tabs.jpg" alt="A second custom interface: agent tabs, a diff and the finished quote." width="3840" height="2160" loading=lazy><div class="dim"></div></figure><figure class="sc" data-prod="Game Lab" data-skin="PS2 menu theme"><img src="media/ui/gamelab-session.jpg" alt="A third custom interface: a Claude Code terminal with quick moves and a notebook." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop" style="left:13.4%;top:7.0%;width:31.4%;height:74.0%" data-sw="1205"><img alt="" data-src="media/ui/crops/gamelab-session-1.jpg" width="1205" height="1599" decoding="async"></div><div class="pop" style="left:0.5%;top:6.6%;width:11.9%;height:27.6%" data-sw="457"><img alt="" data-src="media/ui/crops/gamelab-session-2.jpg" width="457" height="596" decoding="async"></div><span class="tag">A real Claude Code terminal</span><span class="tag">One-click moves for repeat jobs</span></figure></div>
+    <div class="sc-deck"><figure class="sc" data-open data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-launch.jpg" alt="The real Liberty Cockpit launch card: engine and effort picker, command deck on the left." width="3840" height="2160"><div class="dim"></div><div class="pop has-pc" style="left:31.4%;top:32.8%;width:33.8%;height:41.0%" data-sw="1298"><img alt="" data-src="media/ui/crops/liberty-launch-1.jpg" width="1298" height="886" decoding="async"><div class="pc"><p class="w y">WHO RUNS THIS WINDOW?</p>
+<div class="opt"><div><b>FABLE 5.1</b><span>heavy: night orders, orchestration, the hard calls</span></div><div class="on"><b>OPUS 5.5</b><span>everyday driver</span></div>
+<div><b>SONNET 5.5</b><span>quick and cheaper</span></div><div><b>HAIKU 5.5</b><span>fastest, takes no effort dial</span></div>
+<div><b>ASTRA</b><span>GPT-6 through Codex, live Brain chat</span></div></div>
+<p class="w y">EFFORT</p><p class="eff"><i>LOW</i><i>MEDIUM</i><i class="on">HIGH</i><i>XHIGH</i><i>MAX</i><i>ULTRACODE</i></p><p><b class="go">START</b></p></div></div><!--/pop--><span class="tag">Pick the engine and the effort for each tab</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-chat.jpg" alt="The real Liberty Cockpit chat mid-job: thinking, a helper agent, the quote diff and the live brain." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop has-pc" style="left:13.6%;top:17.6%;width:46.4%;height:14.4%" data-sw="1782"><img alt="" data-src="media/ui/crops/liberty-chat-1.jpg" width="1782" height="311" decoding="async"><div class="pc"><div class="me"><p class="w">MIKE · 6:02 PM</p><p>❯ Quote the Birch Lane job from yesterday's notes.</p></div>
+<p class="w">KEVIN · 6:02 PM</p><div class="bx"><p class="w">KEVIN'S THINKING</p><p>Mike wants the Birch Lane quote. Yesterday's job notes should be in the notes folder. I'll read them, have a helper check the price book for the heater and parts, then write the quote file and a short email to Dana.</p></div></div></div><!--/pop--><div class="pop has-pc" style="left:14.4%;top:42.9%;width:45.5%;height:8.8%" data-sw="1747"><img alt="" data-src="media/ui/crops/liberty-chat-2.jpg" width="1747" height="190" decoding="async"><div class="pc"><p><span class="dia">◇</span> <span class="chip">PRICE-CHECK</span> check the price book for the heater and parts</p>
+<p class="sub">⚙ Grep · 50 gal high-efficiency in price-book.csv</p><p class="sub">Price book: 50 gal high-efficiency gas heater, expansion tank, 3/4 in shutoff valve, haul-away fee. All in stock at the supply house. Labor at the standard half-day rate.</p></div></div><!--/pop--><div class="pop has-pc" style="left:14.4%;top:52.1%;width:45.6%;height:17.1%" data-sw="1751"><img alt="" data-src="media/ui/crops/liberty-chat-3.jpg" width="1751" height="370" decoding="async"><div class="pc"><p><span class="sq"></span><b>± 2026-10-12_birch-lane.md</b></p><p class="sub">halvorsen-plumbing\quotes\ <span class="chip">NEW FILE</span> <span class="g">+14</span> <span class="r">-0</span></p>
+<div class="diff"><p>+ # Quote: 14 Birch Lane</p><p>+ Customer: Dana Whitcomb</p><p>+ Remove leaking 50 gal gas water heater, haul away</p><p>+ Install 50 gal high-efficiency gas water heater</p><p>+ New thermal expansion tank and shutoff valve</p><p>+ Permit, venting check, test and clean-up</p></div><p class="w more">+ 2 MORE LINES</p></div></div><!--/pop--><div class="pop" style="left:85.0%;top:78.4%;width:14.7%;height:17.8%" data-sw="564"><img alt="" data-src="media/ui/crops/liberty-chat-4.jpg" width="564" height="385" decoding="async"></div><!--/pop--><span class="tag">You ask. Kevin thinks out loud.</span><span class="tag">A helper agent checks the price book</span><span class="tag">The quote, written line by line</span><span class="tag">The brain, live</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-perm.jpg" alt="The real permission card: the full email to the customer, with Allow once or No." width="3840" height="2160" loading=lazy><div class="dim"></div><span class="tag solo">It asks before it sends anything</span></figure><figure class="sc" data-prod="Money Engine" data-skin="Witch's Lab skin"><img src="media/ui/desk-witch-tabs.jpg" alt="A second custom interface: agent tabs, a diff and the finished quote." width="3840" height="2160" loading=lazy><div class="dim"></div></figure><figure class="sc" data-prod="Game Lab" data-skin="PS2 menu theme"><img src="media/ui/gamelab-session.jpg" alt="A third custom interface: a Claude Code terminal with quick moves and a notebook." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop has-pc" style="left:13.4%;top:7.0%;width:31.4%;height:74.0%" data-sw="1205"><img alt="" data-src="media/ui/crops/gamelab-session-1.jpg" width="1205" height="1599" decoding="async"><div class="pc gl"><div class="wb"><p><b>✻ Welcome to Claude Code!</b></p><p class="sub">cwd: C:\Lab\game-lab</p></div>
+<p>&gt; Read STATUS.md and catch me up in plain English.</p><p><span class="dot">●</span> <b>Read</b>(STATUS.md) <span class="sub">· 54 lines</span><br><span class="dot">●</span> <b>Read</b>(CLAUDE.md) <span class="sub">· 88 lines</span></p>
+<p><span class="dot">●</span> Here is where the lab stands.</p><p class="ind"><b>Cave Runner</b> runs in the browser now. Level 1 and 2 play clean at 60 fps, level 3 drops frames when the lava sprites stack.</p>
+<p><span class="dot">●</span> <b>Update Todos</b></p><p class="ind">☑ Read the lab status<br>■ Profile level 3 of Cave Runner<br>☐ Match the Star Courier sound routine</p></div></div><!--/pop--><div class="pop" style="left:0.5%;top:6.6%;width:11.9%;height:27.6%" data-sw="457"><img alt="" data-src="media/ui/crops/gamelab-session-2.jpg" width="457" height="596" decoding="async"></div><!--/pop--><span class="tag">A real Claude Code terminal</span><span class="tag">One-click moves for repeat jobs</span></figure></div>
     <p class="sc-note">Real interfaces. Sample company.</p>
   </div>
 </section>
@@ -1084,26 +1155,30 @@ tool = call[<span class="s">"tool_name"</span>]
 <footer><div class="wrap"><span>KEVIN, built by Anthony Maisano</span><span>Runs on Claude and GPT</span></div></footer>
 
 <script>
-// Stars: a faint, slow field behind the page from the KEVIN moment on (opacity is driven by the intro timeline)
+// Stars: a faint, slow field of small round points behind the page from the KEVIN moment on (opacity comes from the
+// intro timeline). The canvas is sized to the large viewport so phone toolbars never stretch or uncover it.
 (function(){
-  var c=document.getElementById('stars'),R=document.documentElement;
-  if(!c||matchMedia('(prefers-reduced-motion: reduce)').matches)return;   // opacity stays 0 unless the intro timeline runs
-  var x=c.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2),W=0,H=0,S=[];
+  var c=document.getElementById('stars');
+  if(!c||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var x=c.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2),W=0,H=0,S=[],TAU=Math.PI*2;
   function build(){
-    W=innerWidth;H=innerHeight;c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);
-    var ph=W<700,n=Math.round(W*H/(ph?4400:7200));S=[];          // phones: a few more, a touch bigger, so they read on a small bright screen
-    for(var i=0;i<n;i++){var z=Math.random();S.push({x:Math.random()*W,y:Math.random()*H,z:z,s:(ph?1+z*1.4:.6+z*1.1)*dpr,a:ph?.2+z*.5:.1+z*.42,p:Math.random()*6.283,w:.5+Math.random()*1.3,c:Math.random()<.16?'255,233,176':'232,236,245'})}
+    W=c.clientWidth;H=c.clientHeight;c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);
+    var ph=W<700,n=Math.round(W*H/(ph?4200:6800));S=[];
+    for(var i=0;i<n;i++){var z=Math.random(),big=Math.random()<.07;
+      S.push({x:Math.random()*W,y:Math.random()*H,z:z,r:(big?.95:.38+z*.5)*(ph?1.08:1),a:big?.8:(ph?.22:.12)+z*(ph?.5:.42),
+        p:Math.random()*TAU,w:.4+Math.random()*1.1,c:Math.random()<.14?'255,236,190':'236,240,250'})}
   }
-  var lastW=0;addEventListener('resize',function(){if(Math.abs(innerWidth-lastW)>40||!W){lastW=innerWidth;build()}});
-  build();lastW=innerWidth;
+  var lastW=-1;function size(){if(Math.abs(c.clientWidth-lastW)>2){lastW=c.clientWidth;build()}}
+  addEventListener('resize',size);size();
   function frame(ms){
     requestAnimationFrame(frame);
     if(document.hidden||!(+c.style.opacity>0))return;
-    var t=ms/1000,sy=scrollY;x.clearRect(0,0,c.width,c.height);
+    var t=ms/1000,sy=scrollY;x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,W,H);
     for(var i=0;i<S.length;i++){var s=S[i];
-      var y=((s.y-sy*(.02+s.z*.07)-t*(1.5+s.z*4))%H+H)%H;
-      var a=s.a*(.72+.28*Math.sin(t*s.w+s.p));
-      x.fillStyle='rgba('+s.c+','+a.toFixed(3)+')';x.fillRect(s.x*dpr,y*dpr,s.s,s.s)}
+      var y=((s.y-sy*(.02+s.z*.06)-t*(1.2+s.z*3))%H+H)%H;
+      x.globalAlpha=s.a*(.7+.3*Math.sin(t*s.w+s.p));x.fillStyle='rgb('+s.c+')';
+      x.beginPath();x.arc(s.x,y,s.r,0,TAU);x.fill()}
+    x.globalAlpha=1;
   }
   requestAnimationFrame(frame);
 })();
@@ -1124,7 +1199,7 @@ tool = call[<span class="s">"tool_name"</span>]
   (function(){
     var rv=document.querySelector('.reveal');if(!rv||root.classList.contains('static'))return;
     var inn=document.createElement('div');inn.className='an-in';KV_CHAT(inn);rv.textContent='';rv.appendChild(inn);
-    function fit(){var pt=innerWidth/innerHeight<.9,LW=pt?540:1920,LH=pt?800:1080,f=Math.min(innerWidth/LW,(innerHeight-68)/LH);
+    function fit(){var pt=innerWidth/innerHeight<.9,LW=pt?540:1920,LH=pt?650:1080,f=Math.min(innerWidth/LW,(innerHeight-68)/LH);
       rv.classList.toggle('pt',pt);rv.style.width=LW*f+'px';rv.style.height=LH*f+'px';rv.style.aspectRatio='auto';rv.style.marginTop='68px';
       inn.style.transformOrigin='0 0';inn.style.transform='scale('+f+')'}
     fit();addEventListener('resize',fit);
@@ -1256,15 +1331,18 @@ tool = call[<span class="s">"tool_name"</span>]
         var f=el.parentNode,fw=f.clientWidth,fh=f.clientHeight;
         if(!el.dataset.r){el.dataset.r=[el.style.left,el.style.top,el.style.width,el.style.height].map(parseFloat).join(',')}
         var r=el.dataset.r.split(',').map(Number),rx=fw*r[0]/100,ry=fh*r[1]/100,rw=fw*r[2]/100,rh=fh*r[3]/100;
-        var mob=innerWidth<700,sw=+el.dataset.sw||1e9,s=Math.min(mob?Math.min(innerWidth*.96/rw,innerHeight*.45/rh):Math.min(innerWidth*.84/rw,innerHeight*.62/rh),sw/1.5/rw);
-        // phones: a wide, short close-up gets drawn at reading size and pans left to right while it holds
-        var pan=0;if(mob&&rw/rh>2.4){var sr=Math.min(sw/2.3/rw,innerHeight*.3/rh);if(sr>s){s=sr;pan=Math.max(0,(rw*s-innerWidth*.92)/2)}}
-        // phones: the screen sits at the top and the close-up rises into the space under it (no dead space, nothing covered)
-        var below=0;if(mob){below=f.parentNode.clientHeight-fh-18-64;if(rh*s>below){s=below/rh;pan=Math.max(0,(rw*s-innerWidth*.92)/2)}}
-        el._pan=pan;
-        var W=rw*s,H=rh*s,cx=fw/2,cy=mob?fh+18+H/2:fh*.45;
+        var mob=innerWidth<700,sw=+el.dataset.sw||1e9,W,H,cx=fw/2,cy;
+        if(mob){
+          // phones: the close-up sits whole over the dimmed screen; wide ones are coded cards (.pc), so nothing is ever cut
+          var maxW=innerWidth*.92,maxH=f.parentNode.clientHeight-96,pc=el.querySelector('.pc');
+          if(pc){W=maxW;el.style.width=W+'px';el.style.height='auto';pc.style.zoom='';H=el.offsetHeight;
+            if(H>maxH){pc.style.zoom=(maxH/H).toFixed(3);H=Math.min(el.offsetHeight,maxH)}}   // short screens: shrink the card, never cut it
+          else{var s0=Math.min(maxW/rw,maxH/rh,sw/1.5/rw);W=rw*s0;H=rh*s0}
+          cy=fh/2-26;
+        }else{var s1=Math.min(innerWidth*.84/rw,innerHeight*.62/rh,sw/1.5/rw);W=rw*s1;H=rh*s1;cy=fh*.45}
+        el._pan=0;
         el.style.left=(cx-W/2)+'px';el.style.top=(cy-H/2)+'px';el.style.width=W+'px';el.style.height=H+'px';
-        el._from={x:rx+rw/2-cx,y:ry+rh/2-cy,s:1/s};
+        el._from={x:rx+rw/2-cx,y:ry+rh/2-cy,s:rw/W};
         var k=[].indexOf.call(f.querySelectorAll('.pop'),el),tg=f.querySelectorAll('.tag')[k];
         if(tg){tg.style.top=(cy+H/2+14)+'px';tg.style.bottom='auto'}})}
       LAYOUT();ScrollTrigger.addEventListener('refreshInit',LAYOUT);
@@ -1275,11 +1353,9 @@ tool = call[<span class="s">"tool_name"</span>]
         if(i>0){st.fromTo(f,{opacity:1,clipPath:'inset(100% 0% 0% 0%)',y:60},{clipPath:'inset(0% 0% 0% 0%)',y:0,duration:.7,ease:'power3.out'},t).set(f,{clipPath:'none'},t+.7);t+=.7}
         // every step names both ends (from and to), so a mid-scroll refresh can never leave a part stuck
         var FX=function(i,el){return el._from.x},FY=function(i,el){return el._from.y},FS=function(i,el){return el._from.s};
-        // phones: a screen rests in the middle, glides to the top while a close-up rises under it, then settles back
         var MOB=innerWidth<700,DY=function(i,el){return Math.max(0,(el.parentNode.clientHeight-el.offsetHeight)/2)};
-        if(MOB)gsap.set(f,{top:f.hasAttribute('data-open')?0:DY});
-        var up=function(at){if(MOB)st.fromTo(f,{top:DY},{top:0,duration:.3,ease:'power2.inOut',immediateRender:false},at)},
-            down=function(at){if(MOB)st.fromTo(f,{top:0},{top:DY,duration:.35,ease:'power2.inOut',immediateRender:false},at)};
+        if(MOB)gsap.set(f,{top:DY});                   // phones: every screen rests in the middle; close-ups sit over it
+        var up=function(){},down=function(){};
         if(f.hasAttribute('data-open')){               // opens on its lifted part; scrolling sets it back in place
           st.fromTo(pops[0],{opacity:1,x:0,y:0,scale:1,clipPath:'inset(0% 0% 0% 0%)'},{opacity:1,x:FX,y:FY,scale:FS,clipPath:'inset(0% 0% 0% 0%)',duration:.7,ease:'power3.inOut'},t+.35)
             .fromTo(dim,{opacity:.72},{opacity:0,duration:.5,ease:'power2.inOut'},t+.5)
@@ -1303,7 +1379,7 @@ tool = call[<span class="s">"tool_name"</span>]
             .fromTo([pops[k],tags[k]],{opacity:1},Object.assign({opacity:0,duration:.2},IR),t+1.25);
           t+=1.45;
         }
-        if(pops.length&&!f.hasAttribute('data-open')){st.fromTo(dim,{opacity:.72},{opacity:0,duration:.2,immediateRender:false},t-.1);down(t-.1);if(MOB)t+=.35}
+        if(pops.length&&!f.hasAttribute('data-open')){st.fromTo(dim,{opacity:.72},{opacity:0,duration:.2,immediateRender:false},t-.1);down(t-.1)}
         if(i<figs.length-1){st.fromTo(f,{scale:1,opacity:1},{scale:.94,opacity:MOB?0:.25,duration:.7,immediateRender:false},t+.15);t+=.15}   // phones: no ghost left behind
       });
       st.to({},{duration:.3});
@@ -1343,6 +1419,6 @@ tool = call[<span class="s">"tool_name"</span>]
   });
 })();
 </script>
-<script>(function(){if(document.documentElement.classList.contains('static'))return;var a=document.getElementById('anatomy');new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();import('./js/anatomy.js?v=ft6')},{rootMargin:'1500px 0px'}).observe(a)})();</script>
+<script>(function(){if(document.documentElement.classList.contains('static'))return;var a=document.getElementById('anatomy');new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();import('./js/anatomy.js?v=ft7')},{rootMargin:'1500px 0px'}).observe(a)})();</script>
 </body>
 </html>

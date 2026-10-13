@@ -20,17 +20,19 @@ function init() {
   // state the scroll timeline animates
   const S = { tilt: 0, gap: 0, edges: 0, tour: 0, u: 0 };
   const N = layers.length;
+  layers.forEach((el, i) => { el.style.zIndex = N - i; });          // front-to-back order even where a browser flattens 3D
   let pt = false, LW = 1920, LH = 1080, fit = 1, faceF = 1, overF = 1, faceX = 0, faceY = 0;
 
   function measure() {
     pt = innerWidth / innerHeight < .9;
     stack.classList.toggle('pt', pt);
-    LW = pt ? 540 : 1920; LH = pt ? 800 : 1080;
+    LW = pt ? 540 : 1920; LH = pt ? 650 : 1080;
     fit = Math.min(innerWidth / LW, (innerHeight - 68) / LH);          // cover: the screen below the nav, same as the KEVIN reveal
     if (pt) {
-      const labH = Math.max(0, ...labels.map(l => l.offsetHeight)) + 28;
-      faceF = Math.min(innerWidth * .94 / LW, (innerHeight - 84 - labH - 26) / LH);
-      faceX = 0; faceY = (84 + LH * faceF / 2) - innerHeight / 2;      // sits under the nav, label below
+      const labH = Math.max(0, ...labels.map(l => l.offsetHeight)) + 24;
+      const top = 78, bottom = innerHeight - labH - 18;                  // the space between the nav and the label
+      faceF = Math.min(innerWidth * .94 / LW, (bottom - top) / LH);
+      faceX = 0; faceY = (top + bottom) / 2 - innerHeight / 2;
       overF = fit * .62;
     } else {
       faceF = Math.min(innerWidth * .58 / LW, (innerHeight - 150) / LH);
