@@ -32,11 +32,11 @@
 html{-webkit-text-size-adjust:100%;scroll-padding-top:80px;background:var(--bg)}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
-body{background:var(--bg);color:var(--text);font:400 18px/1.55 Archivo,system-ui,sans-serif;font-stretch:100%;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip}
+body{background:transparent;color:var(--text);font:400 18px/1.55 Archivo,system-ui,sans-serif;font-stretch:100%;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:90;background:url(media/grain.png);opacity:.055;mix-blend-mode:overlay}
 @media (max-width:900px),(pointer:coarse){body::after{display:none}.nav.solid{-webkit-backdrop-filter:none;backdrop-filter:none;background:#07080B}}
-#stars{position:fixed;left:0;top:0;width:100vw;height:100vh;height:100lvh;z-index:0;pointer-events:none;opacity:0}
-main,footer{position:relative;z-index:1}
+#stars{position:fixed;left:0;top:0;width:100vw;height:100vh;height:100lvh;z-index:-1;pointer-events:none;opacity:0}
+main,footer{position:relative}
 ::selection{background:var(--accent);color:#07080B}
 img,video{display:block;max-width:100%}
 a{color:inherit;text-underline-offset:.2em;text-decoration-thickness:1px}
@@ -56,7 +56,7 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 
 .btn{display:inline-flex;align-items:center;gap:12px;height:52px;padding:0 24px;font:620 16px/1 Archivo;font-stretch:104%;text-decoration:none;border:1px solid var(--text);transition:background-color .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease),transform .12s var(--ease)}
 .btn:active{transform:translateY(1px)}
-.btn-solid{background:var(--text);color:var(--bg)}
+.btn-solid{background:var(--text);color:#000;mix-blend-mode:screen}
 .btn-solid:hover{background:var(--accent);border-color:var(--accent)}
 .btn-line{background:transparent;color:var(--text);border-color:var(--line-2)}
 .btn-line:hover{border-color:var(--text)}
@@ -112,6 +112,9 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 @media (max-width:700px){.kline{max-width:calc(25ch + 2 * var(--gut));margin:0 auto}}
 .reveal{position:absolute;width:min(100vw,177.78vh);aspect-ratio:16/9;background:var(--app);transform:scale(.12);opacity:0;overflow:hidden}
 .reveal img,.reveal video{width:100%;height:100%;object-fit:cover}
+.reveal .kv-home{position:absolute;left:0;top:0;border:0;display:block;transform-origin:0 0;background:#0A0A0A}
+.kvhome #intro{height:1028vh}
+.kvhome .reveal{background:#07080B}
 .hint{position:absolute;bottom:28px;left:0;right:0;text-align:center;font:400 12px/1 Mono,monospace;letter-spacing:.24em;color:var(--text-3);text-transform:uppercase}
 .hint i{display:block;width:1px;height:34px;background:var(--text-3);margin:12px auto 0;animation:drip 2.2s var(--ease) infinite}
 @keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
@@ -123,9 +126,6 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .static .b5 .ln>span{transform:none}
 .static .chat.two,.static .flag,.static .hint,.static .cap{display:none}
 .static .reveal{position:relative;opacity:1;transform:none;margin:0 auto}
-.static .track{flex-direction:column;width:auto;transform:none!important}
-.static .case{width:auto}
-.static .who-pin{min-height:0}
 .static .sc .pop,.static .sc .tag,.static .sc .dim{display:none}
 
 
@@ -168,13 +168,10 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .sc .lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .sc .lines .r{fill:none;stroke:var(--accent);stroke-width:.25;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1}
 .sc .lines .r{stroke-width:2}
-.sc .tag{position:absolute;left:50%;bottom:-14px;translate:-50% 100%;translate:-50% 0;z-index:3;opacity:0;transform:translateY(8px);background:var(--accent);color:#07080B;font:700 clamp(12px,1vw,15px)/1.2 Archivo;font-stretch:104%;padding:9px 12px;white-space:nowrap;box-shadow:0 12px 30px -10px rgba(0,0,0,.8)}
+.sc .tag{position:absolute;left:50%;bottom:-14px;translate:-50% 100%;translate:-50% 0;z-index:3;opacity:0;transform:translateY(8px);background:var(--accent);color:#000;mix-blend-mode:screen;font:700 clamp(12px,1vw,15px)/1.2 Archivo;font-stretch:104%;padding:9px 12px;white-space:nowrap;box-shadow:0 12px 30px -10px rgba(0,0,0,.8)}
 .sc .tag.solo{top:calc(100% + 14px);bottom:auto}
-.sc .pop .live{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.live .tr{fill:none;stroke:#7DFF9B;stroke-width:3;stroke-linecap:round;stroke-dasharray:22 100;stroke-dashoffset:22;opacity:.9;animation:brainrun 3.4s linear infinite}
-.live .hd{fill:#D9FFE2}
-@keyframes brainrun{0%{stroke-dashoffset:22}62%{stroke-dashoffset:-100}100%{stroke-dashoffset:-100}}
-@media (prefers-reduced-motion:reduce){.live{display:none}}
+.sc .pop .kvmini{position:absolute;left:4.1%;top:18.2%;width:92.9%;height:77.1%;background:#070707;pointer-events:none}
+.sc .pop .kvmini canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .sc .pop .pc{display:none}
 @media (max-width:700px){.sc .pop.has-pc img{display:none}.sc .pop .pc{display:block}}
 .pc{position:relative;height:100%;overflow:hidden;background:#0A0A0B;box-shadow:inset 0 0 0 1px #3a3a3a;padding:12px 14px;font:400 12.5px/1.5 Mono,ui-monospace,monospace;color:#D8D5CE;text-align:left}
@@ -465,6 +462,17 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 /* the real Liberty engine picker as the Models layer (Anthony: the real card, sharp, beats a redraw) */
 .an-in .pick{display:grid;place-items:center;min-height:0;overflow:hidden}
 .an-in .pick img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;box-shadow:0 0 0 2px #2A2E37}
+/* layer 02: the Liberty brain view, rebuilt in code (js/kvbrain.js, mounted by js/anatomy.js) */
+.an-layer[data-k="brain"]{background:#060606}
+.kvb-slot{overflow:hidden}
+.kvb-slot .kvb.pt{width:450px;height:541.67px;transform:scale(2.4);transform-origin:0 0;right:auto;bottom:auto}
+.kvb.pt .bh{left:18px;top:18px;width:auto;right:18px}
+.kvb.pt .bh-t{flex-wrap:wrap;row-gap:6px}
+.kvb.pt .bh-stats{white-space:normal;line-height:1.5}
+.kvb.pt .sig{right:auto;left:18px;top:auto;bottom:14px;width:auto;right:18px}
+.kvb.pt .sig h5{display:none}
+.kvb.pt .sig li:nth-child(n+4){display:none}
+.kvb.pt .leg{display:none}
 /* AN:CSS end */
 /* ===== after the intro ===== */
 .what{padding:clamp(110px,13vw,190px) 0 clamp(80px,9vw,130px)}
@@ -498,16 +506,49 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .stage .film video.on{opacity:1}
 .stage .fcap span:last-child{font-variant-numeric:tabular-nums}
 
-.who{position:relative}
-.who-pin{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:90px 0 60px}
-.who-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(28px,4vw,48px)}
-.track{display:flex;gap:24px;padding:0 var(--gut);width:max-content}
-.case{width:min(560px,82vw);flex:none;background:var(--bg-3);box-shadow:0 0 0 1px var(--line);padding:32px 32px 30px;display:flex;flex-direction:column}
-.case .k{font:400 13px/1 Mono,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
-.case h3{margin-top:14px}
-.case p{color:var(--text-2);margin-top:12px;font-size:17px}
-.case .tree{margin-top:auto;padding-top:20px;font:400 13px/1.75 Mono,monospace;color:var(--text-2);white-space:pre;border-top:1px solid var(--line);overflow-x:auto}
-.case p+.tree{margin-top:24px}
+/* USES:CSS start: "What it can run" (built by _tools/kv_uses.py from GPT mockup A) */
+.uses{padding:clamp(90px,10vw,150px) 0 clamp(80px,9vw,130px)}
+.uses-head .lead{margin-top:18px;max-width:none;color:var(--text-2);font-size:clamp(18px,1.5vw,23px)}
+.uses-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:clamp(32px,3.4vw,48px)}
+.use{box-shadow:inset 0 0 0 1px rgba(237,238,242,.22);padding:28px 26px 34px;display:flex;flex-direction:column}
+.use h3{font-size:clamp(22px,1.7vw,30px);font-weight:700;font-stretch:112%;letter-spacing:-.02em;line-height:1.08}
+.use p{margin-top:14px;color:var(--text-2);font-size:clamp(15px,1.05vw,18px);line-height:1.5}
+.flow{list-style:none;margin:28px auto 0;padding:0;width:min(100%,260px);margin-top:auto;padding-top:28px}
+.flow li{position:relative;text-align:center;font:400 14px/1 Mono,monospace;color:var(--text-2);padding:12px 8px;box-shadow:inset 0 0 0 1px rgba(237,238,242,.3);transition:color .6s ease-in-out,box-shadow .6s ease-in-out}
+.flow li+li{margin-top:26px}
+.flow li+li::before{content:'';position:absolute;left:50%;top:-26px;width:1px;height:26px;background:rgba(237,238,242,.3);transform-origin:top;transition:background .6s ease-in-out}
+.flow li.on{color:var(--text);box-shadow:inset 0 0 0 1px var(--text)}
+.flow li.on::before,.flow li.lit::before{background:var(--text)}
+.flow li.end{color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);mix-blend-mode:screen}
+.flow-label,.flow-result{transition:opacity .6s ease-in-out}
+.flow-result{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#000;opacity:0}
+.flow li.end.hit .flow-label{opacity:0}
+.flow li.end.hit .flow-result{opacity:1}
+.more{margin-top:clamp(40px,4vw,56px);padding-top:clamp(28px,3vw,40px);border-top:1px solid var(--line)}
+.more-h{font-size:clamp(30px,3.6vw,62px);font-weight:700;font-stretch:112%;letter-spacing:-.03em;line-height:1.05}
+.wall{list-style:none;padding:0;margin:22px 0 0;display:grid;grid-template-columns:repeat(6,auto);justify-content:space-between;gap:14px 28px}
+.wall li{font-size:clamp(15px,1.25vw,22px);letter-spacing:.01em;color:var(--text-2)}
+.more-l{margin-top:26px;font-size:clamp(17px,1.35vw,23px);font-weight:560;color:var(--text)}
+.js .uses .use{opacity:0;transform:translateY(18px)}
+.js .uses .flow li{opacity:0}
+.js .uses .flow li+li::before{transform:scaleY(0)}
+.js .uses .wall li{opacity:.12}
+@media (max-width:1100px){.uses-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wall{grid-template-columns:repeat(3,auto)}}
+@media (max-width:700px){
+  .uses-grid{grid-template-columns:1fr;gap:12px}
+  .use{padding:22px 20px 24px}
+  .flow{width:100%;padding-top:20px}
+  .flow li{font-size:12.5px;padding:9px 10px}
+  .flow li+li{margin-top:14px}
+  .flow li+li::before{top:-14px;height:14px}
+  .wall{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px}
+}
+.static .uses .use,.static .uses .flow li,.static .uses .wall li{opacity:1;transform:none}
+.static .uses .flow li+li::before{transform:none}
+@media (prefers-reduced-motion:reduce){.uses .use,.uses .flow li,.uses .wall li{opacity:1!important;transform:none!important}.uses .flow li+li::before{transform:none!important}.uses .flow li,.uses .flow li::before,.uses .flow-label,.uses .flow-result{transition:none!important}}
+.js .uses .flow li.grow::before{transform:none;transition:transform .6s ease-in-out,background .6s ease-in-out}
+@media (max-width:700px){.js .uses .flow li.grow::before{transform:none}}
+/* USES:CSS end */
 .tree b{font-weight:400;color:var(--text)}
 .tree i{font-style:normal;color:var(--accent)}
 
@@ -551,10 +592,10 @@ h3{font-stretch:108%;font-weight:620;font-size:clamp(23px,2vw,29px);letter-spaci
 .watch li{padding:24px 32px 0 0}
 .watch h3{font-size:22px;margin-bottom:8px}
 .watch p{font-size:16px;color:var(--text-2)}
-.here{padding:clamp(100px,12vw,170px) 0;background:var(--accent);color:#07080B}
+.here{padding:clamp(100px,12vw,170px) 0;background:var(--accent);color:#000;mix-blend-mode:screen}
 .here-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(32px,5vw,80px);align-items:end}
 .here h2{font-size:clamp(44px,6.4vw,104px)}
-.here p{font-size:clamp(18px,1.5vw,21px);line-height:1.5;color:#2A2B30}
+.here p{font-size:clamp(18px,1.5vw,21px);line-height:1.5;color:#000}
 .here p+p{margin-top:16px}
 
 .pricing{padding:clamp(100px,12vw,170px) 0;background:rgba(13,15,20,.72)}
@@ -622,8 +663,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .code{font-size:12.5px;padding:20px}
   .build ol{grid-template-columns:1fr}
   .watch ol{grid-template-columns:1fr;row-gap:8px}
-  .track{flex-direction:column;width:auto}
-  .case{width:auto}
   .ptable{table-layout:fixed}
   .ptable th,.ptable td{padding-right:10px;font-size:15px}
   .ptable .price{font-size:34px}
@@ -632,7 +671,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .care{grid-template-columns:1fr}
   .founder .wrap{grid-template-columns:1fr}
   .founder img{width:140px;height:175px}
-  .case .tree{font-size:11.5px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
@@ -649,7 +687,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <nav aria-label="Main"><ul>
       <li><a href="#anatomy">Product</a></li>
       <li><a href="#themes">Themes</a></li>
-      <li><a href="#who">Who it's for</a></li>
+      <li><a href="#uses">Use cases</a></li>
       <li><a href="#pricing">Pricing</a></li>
       <li><a class="btn btn-line" href="mailto:amaisao48@gmail.com?subject=KEVIN%20build">Book a build</a></li>
     </ul></nav>
@@ -734,38 +772,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
 <section id="anatomy" aria-labelledby="anat-h">
   <div class="anat-stage">
-    <!-- AN:STACK start --><div class="an-scene" aria-hidden="true"><div class="an-stack"><div class="an-layer" data-k="interface"><div class="an-in lc-slot"></div></div><div class="an-layer" data-k="models"><div class="an-in"><div class="an-lay">
+    <!-- AN:STACK start --><div class="an-scene" aria-hidden="true"><div class="an-stack"><div class="an-layer" data-k="interface"><div class="an-in lc-slot"></div></div><div class="an-layer" data-k="brain"><div class="an-in kvb-slot"></div></div><div class="an-layer" data-k="models"><div class="an-in"><div class="an-lay">
   <div class="hd"><b>Any model</b><span>one brain, every engine</span></div>
   <div class="pick"><img src="media/ui/crops/liberty-launch-1.jpg" alt="" width="1298" height="886" decoding="async"></div></div></div></div>
-<div class="an-layer" data-k="memory"><div class="an-in"><div class="an-lay">
-  <div class="hd"><b>The brain</b><span>plain files you own</span></div>
-  <div class="cols" style="grid-template-columns:560px 1fr">
-    <div class="panel"><h4>Files</h4>
-<div class="ltree"><b>halvorsen/</b>
-├ CLAUDE.md
-├ <span class="y">brain/</span>
-│ ├ PRICES.md
-│ ├ LEADS.md
-│ ├ JOBS.md
-│ └ LESSONS.md
-├ <span class="y">skills/</span>
-├ <span class="y">robots/</span>
-└ <span class="y">hooks/</span></div></div>
-    <div class="panel"><h4>CLAUDE.md</h4>
-<pre><span style="color:#fff"># HALVORSEN PLUMBING</span>
-You run the office. Read this first.
-
-<span style="color:#fff">## Laws</span>
-1. Nothing reaches a customer
-   without Mike's yes.
-2. Prices come from PRICES.md.
-3. Lessons get written down
-   the day they happen.
-
-<span class="wide-only"><span class="c">## LESSONS (newest)</span>
-<span class="c">- Oct 12:</span> Dana prefers texts
-  after 5 PM.</span></pre></div>
-  </div></div></div></div>
 <div class="an-layer" data-k="skills"><div class="an-in"><div class="an-lay">
   <div class="hd"><b>Skills and robots</b><span>the repeat work</span></div>
   <div class="cols" style="grid-template-rows:auto 1fr;gap:28px">
@@ -809,8 +818,8 @@ You run the office. Read this first.
     <h2 class="sr" id="anat-h">KEVIN, layer by layer</h2>
     <ol class="alabels">
       <li class="alabel"><span class="n">// 01 Interface</span><h3>Every agent, one screen.</h3><p>A tab for each agent, each on its own model. A lead agent splits the work, a second AI checks it, and you approve from one place.</p></li>
-      <li class="alabel"><span class="n">// 02 Models</span><h3>Claude and GPT. One brain.</h3><p>Opus, Sonnet, Haiku, Fable and GPT side by side. New models get added to the picker on the care plan.</p></li>
-      <li class="alabel"><span class="n">// 03 Brain</span><h3>Persistent memory, built for AI to read.</h3><p>Your rules, prices and lessons live in plain files you own, laid out so the AI reads them the same way every session. Correct it once and the lesson gets saved, then applied to the skill it belongs to.</p></li>
+      <li class="alabel"><span class="n">// 02 Brain</span><h3>Persistent memory, built for AI to read.</h3><p>Your rules, prices and lessons live in plain files you own, laid out so the AI reads them the same way every session. Correct it once and the lesson gets saved, then applied to the skill it belongs to.</p></li>
+      <li class="alabel"><span class="n">// 03 Models</span><h3>Claude and GPT. One brain.</h3><p>Opus, Sonnet, Haiku, Fable and GPT side by side. New models get added to the picker on the care plan.</p></li>
       <li class="alabel"><span class="n">// 04 Skills and robots</span><h3>The repeat work, on a timer.</h3><p>Quotes, follow-ups, invoice reminders and ad reports. Robots run the backup overnight and have your morning brief ready when you wake up.</p></li>
       <li class="alabel"><span class="n">// 05 Hooks</span><h3>Nothing reaches a customer without your yes.</h3><p>Code that runs before the AI acts. Customer messages are held. The money and delete tools you name are blocked.</p></li>
     </ol>
@@ -824,7 +833,7 @@ You run the office. Read this first.
       <p class="lead">The step from everyday chat window user to running a team of agents on your company's operations. It knows your business, and it's connected where it needs to be.</p>
       <div class="ctas">
         <a class="btn btn-solid" href="mailto:amaisao48@gmail.com?subject=KEVIN%20build">Book a build <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
-        <a class="btn btn-line" href="#who">Who it's for</a>
+        <a class="btn btn-line" href="#uses">What it can run</a>
       </div>
     </div>
     <ul class="facts" aria-label="What KEVIN includes">
@@ -843,7 +852,7 @@ You run the office. Read this first.
     <div class="sc-deck"><figure class="sc" data-open data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-launch.jpg" alt="The real Liberty Cockpit launch card: engine and effort picker, command deck on the left." width="3840" height="2160"><div class="dim"></div><div class="pop" style="left:31.4%;top:32.8%;width:33.8%;height:41.0%" data-sw="1298"><img alt="" data-src="media/ui/crops/liberty-launch-1.jpg" width="1298" height="886" decoding="async"></div><!--/pop--><span class="tag">Pick the engine and the effort for each tab</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-chat.jpg" alt="The real Liberty Cockpit chat mid-job: thinking, a helper agent, the quote diff and the live brain." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop has-pc" style="left:13.6%;top:17.6%;width:46.4%;height:14.4%" data-sw="1782"><img alt="" data-src="media/ui/crops/liberty-chat-1.jpg" width="1782" height="311" decoding="async"><div class="pc"><div class="me"><p class="w">MIKE · 6:02 PM</p><p>❯ Quote the Birch Lane job from yesterday's notes.</p></div>
 <p class="w">KEVIN · 6:02 PM</p><div class="bx"><p class="w">KEVIN'S THINKING</p><p>Mike wants the Birch Lane quote. Yesterday's job notes should be in the notes folder. I'll read them, have a helper check the price book for the heater and parts, then write the quote file and a short email to Dana.</p></div></div></div><!--/pop--><div class="pop has-pc" style="left:14.4%;top:42.9%;width:45.5%;height:8.8%" data-sw="1747"><img alt="" data-src="media/ui/crops/liberty-chat-2.jpg" width="1747" height="190" decoding="async"><div class="pc"><p><span class="dia">◇</span> <span class="chip">PRICE-CHECK</span> check the price book for the heater and parts</p>
 <p class="sub">⚙ Grep · 50 gal high-efficiency in price-book.csv</p><p class="sub">Price book: 50 gal high-efficiency gas heater, expansion tank, 3/4 in shutoff valve, haul-away fee. All in stock at the supply house. Labor at the standard half-day rate.</p></div></div><!--/pop--><div class="pop has-pc" style="left:14.4%;top:52.1%;width:45.6%;height:17.1%" data-sw="1751"><img alt="" data-src="media/ui/crops/liberty-chat-3.jpg" width="1751" height="370" decoding="async"><div class="pc"><p><span class="sq"></span><b>± 2026-10-12_birch-lane.md</b></p><p class="sub">halvorsen-plumbing\quotes\ <span class="chip">NEW FILE</span> <span class="g">+14</span> <span class="r">-0</span></p>
-<div class="diff"><p>+ # Quote: 14 Birch Lane</p><p>+ Customer: Dana Whitcomb</p><p>+ Remove leaking 50 gal gas water heater, haul away</p><p>+ Install 50 gal high-efficiency gas water heater</p><p>+ New thermal expansion tank and shutoff valve</p><p>+ Permit, venting check, test and clean-up</p></div><p class="w more">+ 2 MORE LINES</p></div></div><!--/pop--><div class="pop" style="left:85.0%;top:78.4%;width:14.7%;height:17.8%" data-sw="564"><img alt="" data-src="media/ui/crops/liberty-chat-4.jpg" width="564" height="385" decoding="async"><svg class="live" viewBox="0 0 564 385" preserveAspectRatio="none" aria-hidden="true"><path id="bt0" d="M255 218C300 211 350 210 385 222S412 248 390 268" fill="none"/><path class="tr" d="M255 218C300 211 350 210 385 222S412 248 390 268" pathLength="100" style="animation-delay:0.00s"/><circle class="hd" r="4" opacity="0"><animateMotion dur="3.4s" begin="0.00s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.62;1" calcMode="linear"><mpath href="#bt0"/></animateMotion><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.6;.63;1" dur="3.4s" begin="0.00s" repeatCount="indefinite"/></circle><path id="bt1" d="M178 168C230 122 330 110 402 152" fill="none"/><path class="tr" d="M178 168C230 122 330 110 402 152" pathLength="100" style="animation-delay:1.15s"/><circle class="hd" r="4" opacity="0"><animateMotion dur="3.4s" begin="1.15s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.62;1" calcMode="linear"><mpath href="#bt1"/></animateMotion><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.6;.63;1" dur="3.4s" begin="1.15s" repeatCount="indefinite"/></circle><path id="bt2" d="M142 246C192 272 252 292 334 284" fill="none"/><path class="tr" d="M142 246C192 272 252 292 334 284" pathLength="100" style="animation-delay:2.30s"/><circle class="hd" r="4" opacity="0"><animateMotion dur="3.4s" begin="2.30s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.62;1" calcMode="linear"><mpath href="#bt2"/></animateMotion><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.6;.63;1" dur="3.4s" begin="2.30s" repeatCount="indefinite"/></circle><path id="bt3" d="M412 192C362 176 282 176 212 202" fill="none"/><path class="tr" d="M412 192C362 176 282 176 212 202" pathLength="100" style="animation-delay:3.45s"/><circle class="hd" r="4" opacity="0"><animateMotion dur="3.4s" begin="3.45s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.62;1" calcMode="linear"><mpath href="#bt3"/></animateMotion><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.6;.63;1" dur="3.4s" begin="3.45s" repeatCount="indefinite"/></circle></svg></div><!--/pop--><span class="tag">You ask. Kevin thinks out loud.</span><span class="tag">A helper agent checks the price book</span><span class="tag">The quote, written line by line</span><span class="tag">The brain, live</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-perm.jpg" alt="The real permission card: the full email to the customer, with Allow once or No." width="3840" height="2160" loading=lazy><div class="dim"></div><span class="tag solo">It asks before it sends anything</span></figure><figure class="sc" data-prod="Money Engine" data-skin="Witch's Lab skin"><img src="media/ui/desk-witch-tabs.jpg" alt="A second custom interface: agent tabs, a diff and the finished quote." width="3840" height="2160" loading=lazy><div class="dim"></div></figure><figure class="sc" data-prod="Game Lab" data-skin="PS2 menu theme"><img src="media/ui/gamelab-session.jpg" alt="A third custom interface: a Claude Code terminal with quick moves and a notebook." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop has-pc" style="left:13.4%;top:7.0%;width:31.4%;height:74.0%" data-sw="1205"><img alt="" data-src="media/ui/crops/gamelab-session-1.jpg" width="1205" height="1599" decoding="async"><div class="pc gl"><div class="wb"><p><b>✻ Welcome to Claude Code!</b></p><p class="sub">cwd: C:\Lab\game-lab</p></div>
+<div class="diff"><p>+ # Quote: 14 Birch Lane</p><p>+ Customer: Dana Whitcomb</p><p>+ Remove leaking 50 gal gas water heater, haul away</p><p>+ Install 50 gal high-efficiency gas water heater</p><p>+ New thermal expansion tank and shutoff valve</p><p>+ Permit, venting check, test and clean-up</p></div><p class="w more">+ 2 MORE LINES</p></div></div><!--/pop--><div class="pop" style="left:85.0%;top:78.4%;width:14.7%;height:17.8%" data-sw="564"><img alt="" data-src="media/ui/crops/liberty-chat-4.jpg" width="564" height="385" decoding="async"><div class="kvmini" aria-hidden="true"><canvas></canvas></div></div><!--/pop--><span class="tag">You ask. Kevin thinks out loud.</span><span class="tag">A helper agent checks the price book</span><span class="tag">The quote, written line by line</span><span class="tag">The brain, live</span></figure><figure class="sc" data-prod="Liberty Cockpit" data-skin="Baseline theme"><img src="media/ui/liberty-perm.jpg" alt="The real permission card: the full email to the customer, with Allow once or No." width="3840" height="2160" loading=lazy><div class="dim"></div><span class="tag solo">It asks before it sends anything</span></figure><figure class="sc" data-prod="Money Engine" data-skin="Witch's Lab skin"><img src="media/ui/desk-witch-tabs.jpg" alt="A second custom interface: agent tabs, a diff and the finished quote." width="3840" height="2160" loading=lazy><div class="dim"></div></figure><figure class="sc" data-prod="Game Lab" data-skin="PS2 menu theme"><img src="media/ui/gamelab-session.jpg" alt="A third custom interface: a Claude Code terminal with quick moves and a notebook." width="3840" height="2160" loading=lazy><div class="dim"></div><div class="pop has-pc" style="left:13.4%;top:7.0%;width:31.4%;height:74.0%" data-sw="1205"><img alt="" data-src="media/ui/crops/gamelab-session-1.jpg" width="1205" height="1599" decoding="async"><div class="pc gl"><div class="wb"><p><b>✻ Welcome to Claude Code!</b></p><p class="sub">cwd: C:\Lab\game-lab</p></div>
 <p>&gt; Read STATUS.md and catch me up in plain English.</p><p><span class="dot">●</span> <b>Read</b>(STATUS.md) <span class="sub">· 54 lines</span><br><span class="dot">●</span> <b>Read</b>(CLAUDE.md) <span class="sub">· 88 lines</span></p>
 <p><span class="dot">●</span> Here is where the lab stands.</p><p class="ind"><b>Cave Runner</b> runs in the browser now. Level 1 and 2 play clean at 60 fps, level 3 drops frames when the lava sprites stack.</p>
 <p><span class="dot">●</span> <b>Update Todos</b></p><p class="ind">☑ Read the lab status<br>■ Profile level 3 of Cave Runner<br>☐ Match the Star Courier sound routine</p></div></div><!--/pop--><div class="pop" style="left:0.5%;top:6.6%;width:11.9%;height:27.6%" data-sw="457"><img alt="" data-src="media/ui/crops/gamelab-session-2.jpg" width="457" height="596" decoding="async"></div><!--/pop--><span class="tag">A real Claude Code terminal</span><span class="tag">One-click moves for repeat jobs</span></figure></div>
@@ -880,61 +889,13 @@ You run the office. Read this first.
   </div>
 </section>
 
-<section class="who" id="who" aria-labelledby="who-h">
-  <div class="who-pin">
-    <div class="wrap who-head">
-      <h2 class="display" id="who-h">Who it's for.</h2>
-      <p class="lead">The interview shapes KEVIN around how you make money. Example builds:</p>
-    </div>
-    <div class="track">
-      <article class="case">
-        <span class="k">Realtors</span>
-        <h3>A reply drafted for every lead while you're at a showing.</h3>
-        <p>Listing descriptions from your notes and photos, showing follow-ups, open house recaps, and a weekly market brief for your sphere.</p>
-<div class="tree"><b>realty/</b>
-├ <i>brain/</i> LISTINGS.md  CLIENTS.md  MARKET.md
-├ <i>skills/</i> listing-writer  showing-followup
-└ <i>robots/</i> new-lead-check  market-brief</div>
-      </article>
-      <article class="case">
-        <span class="k">Developers</span>
-        <h3>Every project, permit and contractor in one brain.</h3>
-        <p>Investor updates drafted from site notes, bids compared line by line, permit deadlines tracked, and a Monday brief across every project.</p>
-<div class="tree"><b>development/</b>
-├ <i>projects/</i> 1140-main/  riverside-lofts/
-├ <i>skills/</i> investor-update  bid-compare
-└ <i>robots/</i> permit-deadlines  monday-brief</div>
-      </article>
-      <article class="case">
-        <span class="k">Contractors and trades</span>
-        <h3>Quotes from job notes. Invoice reminders on schedule.</h3>
-        <p>Lead replies, priced quotes, invoice reminders and review replies. I run my family's flooring company on this shape.</p>
-<div class="tree"><b>company/</b>
-├ <i>brain/</i> PRICES.md  LEADS.md  JOBS.md
-├ <i>skills/</i> quote-from-notes  lead-reply
-└ <i>robots/</i> lead-check  nightly-backup</div>
-      </article>
-      <article class="case">
-        <span class="k">Brokers</span>
-        <h3>Research before every call. Follow-up after every silence.</h3>
-        <p>Prospect research, follow-ups when a deal goes quiet, deal summaries, and a pipeline brief every morning.</p>
-<div class="tree"><b>brokerage/</b>
-├ <i>brain/</i> PIPELINE.md  ACCOUNTS.md
-├ <i>skills/</i> prospect-research  follow-up
-└ <i>robots/</i> stale-deal-check</div>
-      </article>
-      <article class="case">
-        <span class="k">Agencies</span>
-        <h3>Client reports and content calendars without the late nights.</h3>
-        <p>One brain per client, ad reports across accounts, content drafted in each client's voice, and a roll-up for you.</p>
-<div class="tree"><b>agency/</b>
-├ <i>clients/</i> north-coffee/  dyer-law/
-├ <i>skills/</i> ad-report  content-calendar
-└ <i>robots/</i> rollup-report</div>
-      </article>
-    </div>
+<!-- USES start --><section class="uses" id="uses" aria-labelledby="uses-h">
+  <div class="wrap">
+    <div class="uses-head"><h2 class="display" id="uses-h">What it can run.</h2><p class="lead">Each one is built from a setup already running in a real business. The interview picks yours.</p></div>
+    <div class="uses-grid"><article class="use"><h3>A front desk that never clocks out.</h3><p>Customer emails get a reply drafted in your voice and held for your OK. Missed calls get a text back. Every lead lands in your CRM with its follow-ups already scheduled.</p><ol class="flow" aria-label="What runs"><li>email-reply</li><li>missed-call text-back</li><li>follow-up schedule</li><li class="end"><span class="flow-label">CRM sync</span><span class="flow-result" aria-hidden="true">CRM sync</span></li></ol></article><article class="use"><h3>A cold outreach machine.</h3><p>It builds the target list, writes each first touch, schedules the follow-ups and watches for replies. You approve the list and the words before anything goes out.</p><ol class="flow" aria-label="What runs"><li>target-list</li><li>first-touch</li><li>follow-up timer</li><li class="end"><span class="flow-label">reply watch</span><span class="flow-result" aria-hidden="true">reply watch</span></li></ol></article><article class="use"><h3>Fresh leads every morning.</h3><p>It reads the bid boards and public lists you point it at, scores what it finds and hands you the ones worth a call.</p><ol class="flow" aria-label="What runs"><li>board reader</li><li>lead scoring</li><li class="end"><span class="flow-label">morning list</span><span class="flow-result" aria-hidden="true">morning list</span></li></ol></article><article class="use"><h3>Owner info on every property.</h3><p>We connect a live property API to add owner names and mailing addresses to your list. You get a first step toward your own property database, set up so the AI can read it.</p><ol class="flow" aria-label="What runs"><li>property API</li><li>owner match</li><li class="end"><span class="flow-label">mailing list</span><span class="flow-result" aria-hidden="true">mailing list</span></li></ol></article></div>
+    <div class="more"><h3 class="more-h">That's four. Your business has its own list.</h3><ul class="wall"><li>Quotes from job notes</li><li>Invoice reminders</li><li>Review asks</li><li>Ad spend reports</li><li>Morning briefs</li><li>Content calendars</li><li>Investor updates</li><li>Permit deadlines</li><li>Bid comparisons</li><li>Showing follow-ups</li><li>Market briefs</li><li>Supplier price checks</li><li>Crew schedules</li><li>Proposal decks</li><li>Website changes</li><li>Video edits</li><li>Spreadsheet cleanup</li><li>Listing descriptions</li></ul><p class="more-l">If the work repeats and lives on a computer, it can become a skill.</p></div>
   </div>
-</section>
+</section><!-- USES end -->
 
 <section class="market" aria-labelledby="market-h">
   <div class="wrap market-grid">
@@ -1204,10 +1165,25 @@ tool = call[<span class="s">"tool_name"</span>]
   (function(){
     var rv=document.querySelector('.reveal');if(!rv||root.classList.contains('static'))return;
     var inn=document.createElement('div');inn.className='an-in';KV_CHAT(inn);rv.textContent='';rv.appendChild(inn);
+    // HOME first (Anthony: KEVIN, then the HOME dashboard, then the chat). ?home=0 shows the version without it.
+    var hf=null;
+    // the calm dashboard coded for the site (kv/home2.html) is the default; ?home=liberty is Liberty's real HOME, ?home=0 none
+    var hv=(location.search.match(/[?&]home=([a-z0-9]+)/)||[])[1]||'calm';   // Anthony shipped the calm one 2026-10-13; ?home=liberty shows his real HOME
+    if(hv!=='0'){root.classList.add('kvhome');hf=document.createElement('iframe');hf.className='kv-home';hf.dataset.z=hv==='calm'?'1.16':'2.3';
+      hf.title='Liberty Cockpit HOME, sample data';hf.setAttribute('aria-hidden','true');hf.tabIndex=-1;rv.appendChild(hf);
+      var ld=function(){if(!hf.getAttribute('src'))hf.src=(hv==='calm'?'kv/home2.html':'kv/home.html')+'?v=kv2'};
+      if(document.readyState==='complete')setTimeout(ld,600);else addEventListener('load',function(){setTimeout(ld,600)})}
+    window.KV_HOME=hf;window.KV_INN=inn;
     var scn=rv.parentNode;   // measured from the pinned scene, same as the 3D section, so the hand-off lines up on real phones
     function fit(){var SW=scn.clientWidth||innerWidth,SH=scn.clientHeight||innerHeight,pt=SW/SH<.9,LW=pt?540:1920,LH=pt?650:1080,f=Math.min(SW/LW,(SH-68)/LH);
       rv.classList.toggle('pt',pt);rv.style.width=LW*f+'px';rv.style.height=LH*f+'px';rv.style.aspectRatio='auto';rv.style.marginTop='68px';
-      inn.style.transformOrigin='0 0';inn.style.transform='scale('+(pt?f/2:f)+')'}
+      inn.style.transformOrigin='0 0';inn.style.transform='scale('+(pt?f/2:f)+')';
+      if(hf){hf.style.width=LW+'px';hf.style.height=LH+'px';hf.dataset.f=f;hf.dataset.lw=LW;hf.dataset.lh=LH;KV_ZOOM()}}
+    // the camera pushes in on the Go to chat button so the click is front and centre (k 0..1)
+    var zk=0;window.KV_ZOOM=function(k){if(k!=null)zk=k;if(!hf)return;var f=+hf.dataset.f||1,LW=+hf.dataset.lw,LH=+hf.dataset.lh,Z=+hf.dataset.z,bx=LW/2,by=LH/2;
+      try{var r=hf.contentDocument.getElementById('go').getBoundingClientRect();bx=r.left+r.width/2;by=r.top+r.height/2}catch(e){}
+      var z=1+(Z-1)*zk,tx=bx+(LW/2-bx)*zk-z*bx,ty=by+(LH/2-by)*zk-z*by;
+      hf.style.transform='scale('+f+') translate('+tx+'px,'+ty+'px) scale('+z+')'};
     fit();addEventListener('resize',fit);
   })();
   // live bits on every coded chat: the spinner and the job timer
@@ -1312,8 +1288,18 @@ tool = call[<span class="s">"tool_name"</span>]
       .to('.kline',{opacity:0,y:-20,duration:.35,ease:'power2.in'},20.1)
       .to('.reveal',{opacity:1,duration:.2},20.3)
       .fromTo('.reveal',{scale:.12},{scale:1,duration:1.6,ease:'power2.inOut'},20.3)
-      .to('.kevin',{scale:5,opacity:0,duration:1.2,ease:'power2.in'},20.3)
-      .to({},{duration:.4});
+      .to('.kevin',{scale:5,opacity:0,duration:1.2,ease:'power2.in'},20.3);
+    if(window.KV_HOME){   // HOME lands, a payment rolls in, the cursor clicks "Go to chat" and the chat is underneath
+      var HF=window.KV_HOME,hm=function(m){try{HF.contentWindow.postMessage(m,'*')}catch(e){}},cur={p:0},zm={k:0};
+      tl.call(function(){hm({kv:'arrive'})},null,20.5)
+        .call(function(){hm({kv:tl.scrollTrigger&&tl.scrollTrigger.direction<0?'unpay':'pay'})},null,22.3)
+        .fromTo(zm,{k:0},{k:1,duration:.7,ease:'power2.inOut',onUpdate:function(){KV_ZOOM(zm.k)}},23.0)
+        .fromTo(cur,{p:0},{p:1,duration:1.1,ease:'none',onUpdate:function(){hm({kv:'cursor',p:cur.p})}},23.4)
+        .set(HF,{visibility:'hidden'},24.55)
+        .set(window.KV_INN,{visibility:'visible'},24.55);
+      tl.set(window.KV_INN,{visibility:'hidden'},20.29);
+    }
+    tl.to({},{duration:.4});
 
     document.querySelectorAll('main section:not(#intro) h2.display').forEach(function(h){
       var sp=new SplitText(h,{type:'words',wordsClass:'w'});
@@ -1324,6 +1310,13 @@ tool = call[<span class="s">"tool_name"</span>]
 
 
     new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();document.querySelectorAll('#screens .pop img[data-src]').forEach(function(el){el.src=el.dataset.src})},{rootMargin:'1200px 0px'}).observe(document.getElementById('screens'));
+    // the mini brain in the walkthrough close-up: the real panel's motion, rebuilt in code (12 frames a second, like the app)
+    (function(){var boxes=[].slice.call(document.querySelectorAll('#screens .kvmini'));if(!boxes.length)return;
+      new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();
+        import('./js/kvbrain.js?v=kv1').then(function(m){boxes.forEach(function(b){var v=new m.BrainView(b.querySelector('canvas'),{mode:'mini'});
+          function fit(){var r=b.getBoundingClientRect(),k=b.offsetWidth?r.width/b.offsetWidth:1;v.size(b.clientWidth,b.clientHeight,Math.min(4,(devicePixelRatio||1)*Math.max(1,k*1.4)))}
+          fit();addEventListener('resize',fit);var halt=null;
+          new IntersectionObserver(function(e){if(e[0].isIntersecting){fit();if(!halt)halt=m.runMini(v)}else if(halt){halt();halt=null}}).observe(b)})})},{rootMargin:'600px 0px'}).observe(document.getElementById('screens'))})();
     // Screens: each real interface in turn, parts lifted out and labeled
     (function(){
       var figs=[].slice.call(document.querySelectorAll('#screens .sc'));
@@ -1411,13 +1404,47 @@ tool = call[<span class="s">"tool_name"</span>]
       mark(0);
     })();
 
-    var mm=gsap.matchMedia();
-    mm.add('(min-width: 701px)',function(){
-      var track=document.querySelector('.track');
-      function dist(){return Math.max(0,track.scrollWidth-innerWidth)}
-      gsap.to(track,{x:function(){return -dist()},ease:'none',
-        scrollTrigger:{trigger:'.who',start:'top top',end:function(){return '+='+dist()},pin:'.who-pin',scrub:.6,invalidateOnRefresh:true}});
-    });
+    // USES:JS start: "What it can run": one flow at a time, with a quiet rest between cards.
+    // Fade the gold layer without interpolating its pure black lettering. The list enters once in order.
+    (function(){
+      var sec=document.getElementById('uses');if(!sec)return;
+      var cards=[].slice.call(sec.querySelectorAll('.use')),wall=[].slice.call(sec.querySelectorAll('.wall li'));
+      var motion=matchMedia('(prefers-reduced-motion: reduce)'),timer,stopped=motion.matches;
+      if(stopped)return;
+      var tl=gsap.timeline({scrollTrigger:{trigger:'.uses-grid',start:'top 78%',once:true},onComplete:run});
+      tl.to(cards,{opacity:1,y:0,duration:.8,ease:'expo.out',stagger:.09});
+      cards.forEach(function(c,i){var li=c.querySelectorAll('.flow li');
+        tl.to(li,{opacity:1,duration:.3,stagger:.16},.25+i*.09);
+        li.forEach(function(el,k){if(k)tl.add(function(){el.classList.add('grow')},.25+i*.09+k*.16)})});
+      function run(){
+        var card=0,k=0;
+        function step(){
+          if(stopped)return;
+          var li=[].slice.call(cards[card].querySelectorAll('.flow li'));
+          li.forEach(function(el){el.classList.remove('on','lit','hit')});
+          if(k===li.length){
+            k=0;card=(card+1)%cards.length;
+            timer=setTimeout(step,600+1500);return;
+          }
+          for(var j=0;j<=k;j++)li[j].classList.add(j===k?'on':'lit');
+          var result=k===li.length-1;
+          if(result)li[k].classList.add('hit');
+          k++;timer=setTimeout(step,result?600+2500:1400);
+        }
+        step();
+      }
+      var wallEntrance=gsap.to(wall,{opacity:1,duration:.8,ease:'power1.out',stagger:.14,
+        scrollTrigger:{trigger:'.wall',start:'top 85%',once:true}});
+      motion.addEventListener('change',function(e){
+        if(!e.matches)return;
+        stopped=true;clearTimeout(timer);tl.kill();wallEntrance.kill();
+        gsap.set(cards,{opacity:1,y:0});gsap.set(wall,{opacity:1});
+        sec.querySelectorAll('.flow li').forEach(function(el){
+          el.classList.remove('on','lit','hit');el.classList.add('grow');el.style.opacity=1;
+        });
+      });
+    })();
+    // USES:JS end
 
     gsap.from('.ptable tbody tr',{opacity:0,y:10,duration:.6,ease:'expo.out',stagger:.035,
       scrollTrigger:{trigger:'.ptable',start:'top 75%',once:true}});
@@ -1426,6 +1453,6 @@ tool = call[<span class="s">"tool_name"</span>]
   });
 })();
 </script>
-<script>(function(){if(document.documentElement.classList.contains('static'))return;var a=document.getElementById('anatomy');new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();import('./js/anatomy.js?v=ft9')},{rootMargin:'1500px 0px'}).observe(a)})();</script>
+<script>(function(){if(document.documentElement.classList.contains('static'))return;var a=document.getElementById('anatomy');new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();import('./js/anatomy.js?v=kv1')},{rootMargin:'1500px 0px'}).observe(a)})();</script>
 </body>
 </html>

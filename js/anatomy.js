@@ -18,6 +18,34 @@ function init() {
   const slot = stack.querySelector('.lc-slot');
   if (slot && window.KV_CHAT) window.KV_CHAT(slot);
 
+  // layer 02: the Liberty brain view, rebuilt in code. It runs only while it can be seen, and opens (the newest event
+  // blooms, the drift eases in) as the camera arrives on it, the way the real view opens.
+  const bslot = stack.querySelector('.kvb-slot');
+  let B = null, Bmod = null, bOpened = false, bRun = false, bFrame = 0;
+  function mountBrain() {
+    if (!Bmod || !bslot) return;
+    if (B) B.view.stop();
+    bslot.textContent = '';
+    B = Bmod.mountBrainView(bslot, { portrait: pt, labelScale: pt ? 1.25 : 1,
+      layout: pt ? (W, H) => ({ cx: W * .5, cy: H * .5, sc: Math.min(W, H) * .27, lite: true }) : null });
+    B.pt = pt; B.k = 0; sizeBrain(); B.view.draw();
+  }
+  function sizeBrain() {
+    const r = bslot.getBoundingClientRect(), dw = pt ? 450 : 1920, dh = pt ? 541.67 : 1080;
+    const k = Math.max(.25, Math.min(3, Math.round(r.width / (pt ? 1080 : 1920) * (pt ? 2.4 : 1) * (devicePixelRatio || 1) * 4) / 4));
+    if (k !== B.k) { B.k = k; B.view.size(dw, dh, k); }
+  }
+  function brainTick() {
+    if (!B) return;
+    const want = visible && S.u < 1.75 && (S.tilt > .02 || S.u > .02);
+    if (want !== bRun) { bRun = want; want ? B.view.start() : B.view.stop(); }
+    if (!want) return;
+    if (++bFrame % 12 === 0) sizeBrain();
+    if (!bOpened && S.u > .55 && S.tour > .5) { bOpened = true; B.view.open(); }
+    if (bOpened && S.u < .3) bOpened = false;
+  }
+  if (bslot) import('./kvbrain.js?v=kv1').then(m => { Bmod = m; mountBrain(); }).catch(() => {});
+
   // state the scroll timeline animates
   const S = { tilt: 0, gap: 0, edges: 0, tour: 0, u: 0 };
   const N = layers.length;
@@ -52,6 +80,7 @@ function init() {
       overF = fit * .5;
     }
     if (alabels) { alabels.style.top = labTop + 'px'; alabels.style.bottom = 'auto'; }
+    if (B && B.pt !== pt) mountBrain();
   }
 
   // pointer parallax (desktop), smoothed in the frame loop
@@ -110,7 +139,7 @@ function init() {
 
   let visible = false;
   new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { rootMargin: '200px' }).observe(section);
-  (function frame() { requestAnimationFrame(frame); if (visible) render(); })();
+  (function frame() { requestAnimationFrame(frame); if (visible) render(); brainTick(); })();
 
   // one chat, not two: the stage shows only once it pins over the intro's last frame, and the intro scene steps aside
   const stage = stageEl, scene = document.querySelector('#intro .scene');
