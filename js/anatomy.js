@@ -1,168 +1,110 @@
-// KEVIN, layer by layer: a scroll-driven exploded view of the product (Three.js + GSAP ScrollTrigger).
-import * as THREE from '../vendor/three.module.js';
+// KEVIN, layer by layer: a scroll-driven exploded view built from real page code (CSS 3D), so every word stays sharp.
+// Layers live in #anatomy .an-stack (built by _tools/ft_anatomy.py). Landscape layers are 1920x1080; on portrait
+// screens the stack switches to tall 540x800 layouts so a face-on layer fills a phone and reads clearly.
 
 const section = document.getElementById('anatomy');
-const canvas = document.getElementById('anat');
+const stack = section.querySelector('.an-stack');
+const layers = [...stack.querySelectorAll('.an-layer')];
 const labels = [...section.querySelectorAll('.alabel')];
 const intro = section.querySelector('.anat-intro');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-if (!reduce && window.gsap && window.ScrollTrigger) {
-  try { init(); } catch (e) { document.documentElement.classList.add('anat-static'); }
-} else document.documentElement.classList.add('anat-static');
+if (reduce || !window.gsap || !window.ScrollTrigger || !stack) document.documentElement.classList.add('anat-static');
+else { try { init(); } catch (e) { document.documentElement.classList.add('anat-static'); } }
 
 function init() {
   gsap.registerPlugin(ScrollTrigger);
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 900 ? 1.5 : 2));
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.setClearColor(0x07080b, 1);
-  document.documentElement.classList.remove('anat-static');
-  canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); document.documentElement.classList.add('anat-static'); ScrollTrigger.refresh(); });
+  const slot = stack.querySelector('.lc-slot');
+  if (slot && window.KV_CHAT) window.KV_CHAT(slot);
 
-  const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x07080b, 26, 62);
-  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 200);
+  // state the scroll timeline animates
+  const S = { tilt: 0, gap: 0, edges: 0, tour: 0, u: 0 };
+  const N = layers.length;
+  let pt = false, LW = 1920, LH = 1080, fit = 1, faceF = 1, overF = 1, faceX = 0, faceY = 0;
 
-  const loader = new THREE.TextureLoader();
-  const maxAniso = renderer.capabilities.getMaxAnisotropy();
-  const names = ['interface', 'models', 'brain', 'skills', 'hooks'];
-  const W = 16, H = 9;
-
-  const outer = new THREE.Group();   // yaw
-  const inner = new THREE.Group();   // pitch
-  outer.add(inner); scene.add(outer);
-
-  const layers = names.map((n, i) => {
-    const tex = loader.load(`media/layers/${n}.jpg`, () => ScrollTrigger.refresh());
-    tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = maxAniso;
-    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, toneMapped: false, side: THREE.DoubleSide });
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(W, H), mat);
-    const edge = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry),
-      new THREE.LineBasicMaterial({ color: i === 0 ? 0xffd23f : 0x4a505c, transparent: true, opacity: 0.0 }));
-    const g = new THREE.Group(); g.add(mesh); g.add(edge);
-    g.position.z = -i * 0.002;  // stacked flat at the start, interface on top
-    inner.add(g);
-    return { g, mesh, edge, mat };
-  });
-
-  // Dust: slow, sparse, for depth
-  const N = 420, pos = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) { pos[i*3] = (Math.random()-.5)*60; pos[i*3+1] = (Math.random()-.5)*36; pos[i*3+2] = (Math.random()-.5)*40 - 6; }
-  const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.05, transparent: true, opacity: 0, depthWrite: false }));
-  scene.add(dust);
-
-  // State the timeline animates
-  const S = { pitch: 0, yaw: 0, gap: 0, dist: 0, focus: -1, lift: 0, dim: 0, edges: 0, dust: 0, camY: 0, tour: 0, u: 0 };
-
-  function fitDistance() {
-    // distance at which the 16x9 plane fills the viewport (contain)
-    const vFov = THREE.MathUtils.degToRad(camera.fov);
-    const hByH = H / 2 / Math.tan(vFov / 2);
-    const hByW = (W / 2) / (Math.tan(vFov / 2) * camera.aspect);
-    return Math.max(hByH, hByW);
+  function measure() {
+    pt = innerWidth / innerHeight < .9;
+    stack.classList.toggle('pt', pt);
+    LW = pt ? 540 : 1920; LH = pt ? 800 : 1080;
+    fit = Math.min(innerWidth / LW, (innerHeight - 68) / LH);          // cover: the screen below the nav, same as the KEVIN reveal
+    if (pt) {
+      const labH = Math.max(0, ...labels.map(l => l.offsetHeight)) + 28;
+      faceF = Math.min(innerWidth * .94 / LW, (innerHeight - 84 - labH - 26) / LH);
+      faceX = 0; faceY = (84 + LH * faceF / 2) - innerHeight / 2;      // sits under the nav, label below
+      overF = fit * .62;
+    } else {
+      faceF = Math.min(innerWidth * .58 / LW, (innerHeight - 150) / LH);
+      const gut = Math.min(56, Math.max(20, innerWidth * .04));
+      faceX = (innerWidth - gut - LW * faceF / 2) - innerWidth / 2;     // right side; the labels own the left
+      faceY = 20;
+      overF = fit * .5;
+    }
   }
-  function resize() {
-    const w = canvas.clientWidth, h = canvas.clientHeight;
-    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
-  }
-  addEventListener('resize', resize); resize();
 
-  // Pointer parallax
+  // pointer parallax (desktop), smoothed in the frame loop
   const P = { x: 0, y: 0, tx: 0, ty: 0 };
-  addEventListener('pointermove', e => { P.tx = (e.clientX / innerWidth - .5); P.ty = (e.clientY / innerHeight - .5); }, { passive: true });
+  addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { P.tx = e.clientX / innerWidth - .5; P.ty = e.clientY / innerHeight - .5; } }, { passive: true });
+
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const clamp = v => Math.max(0, Math.min(1, v));
+  let last = '';
+  function render() {
+    P.x += (P.tx - P.x) * .08; P.y += (P.ty - P.y) * .08;
+    const k = S.tour * S.tour * (3 - 2 * S.tour);                       // eased blend: overview -> square-on tour
+    const f = lerp(lerp(fit, overF, S.tilt), faceF, k);
+    const free = S.tilt * (1 - k);
+    const rx = 55 * free - P.y * 6 * free, rz = -38 * free + P.x * 6 * free;
+    const G = S.gap * LH * .3;                                         // spacing between layers (layer px)
+    const zc = k * S.u * (G + 1);
+    const ty0 = 34 * (1 - S.tilt) * (1 - k);                           // cover centered in the space under the nav
+    const tx = faceX * k, ty = ty0 + faceY * k + (pt ? -innerHeight * .04 : innerHeight * .02) * free;
+    const key = [f, rx, rz, G, zc, tx, ty, S.u, S.edges].map(v => v.toFixed(3)).join();
+    if (key === last) return; last = key;
+    stack.style.transform = `translate3d(${tx}px,${ty}px,0) scale3d(${f},${f},${f}) rotateX(${rx}deg) rotateZ(${rz}deg) translate3d(0,0,${zc}px)`;
+    for (let i = 0; i < N; i++) {
+      const el = layers[i];
+      const near = Math.max(0, 1 - Math.abs(i - S.u));
+      const front = clamp((S.u - i) * 1.6) * k;                         // layers between the camera and the one on show
+      const op = 1 - front;
+      el.style.transform = `translate3d(0,0,${-i * (G + 1)}px)`;
+      el.style.opacity = op.toFixed(3);
+      el.style.visibility = op < .01 ? 'hidden' : 'visible';
+      el.style.setProperty('--dim', (.74 * k * (1 - near)).toFixed(3));
+      el.style.setProperty('--edge', (S.edges * (.5 + .5 * near * k)).toFixed(3));
+    }
+  }
 
   const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' },
-    scrollTrigger: { trigger: section, start: 'top top', end: 'bottom bottom', scrub: 1,
+    scrollTrigger: { trigger: section, start: 'top top', end: 'bottom bottom', scrub: 1, invalidateOnRefresh: true,
       onUpdate: st => showLabel(st.progress) } });
-
-  tl.to(S, { pitch: -1.02, yaw: -0.62, dist: 1, edges: 1, dust: 1, duration: 1 }, 0)          // tilt into 3D
-    .to(S, { gap: 2.4, duration: .9 }, 0.6)                                                    // explode
-    .to(intro, { opacity: 0, y: -30, duration: .4 }, 0.15);
-  // bring each layer forward in turn
-  // the camera glides down the exploded stack, settling square-on to each layer in turn
+  tl.fromTo(S, { tilt: 0, edges: 0 }, { tilt: 1, edges: 1, duration: 1 }, 0)            // tilt into 3D
+    .fromTo(S, { gap: 0 }, { gap: 1, duration: .9 }, .6)                               // explode
+    .fromTo(intro, { opacity: 1, y: 0 }, { opacity: 0, y: -30, duration: .4 }, .15);
   const T0 = 1.6, STEP = 1.5;
-  tl.to(S, { tour: 1, dim: 1, duration: .6 }, T0 - .3);
-  for (let i = 1; i < names.length; i++) tl.to(S, { u: i, duration: .8, ease: 'power2.inOut' }, T0 + (i - 1) * STEP + .7);
-  const TE = T0 + (names.length - 1) * STEP + 1.4;
-  tl.to(S, { tour: 0, dim: 0, duration: .7 }, TE)
-    .to(S, { gap: 0, pitch: 0, yaw: 0, dist: 0, edges: 0, duration: 1 }, TE + .4)   // ends on the full Liberty screen
-    .to(section.querySelector('.anat-stage'), { opacity: 0, duration: .4 }, TE + 1.5);
+  tl.fromTo(S, { tour: 0 }, { tour: 1, duration: .6 }, T0 - .3);
+  for (let i = 1; i < N; i++) tl.fromTo(S, { u: i - 1 }, { u: i, duration: .8, immediateRender: false }, T0 + (i - 1) * STEP + .7);
+  const TE = T0 + (N - 2) * STEP + 1.5;                                                  // the last layer has arrived
+  tl.to({}, { duration: 1 }, TE);                                                        // hold on it, then the page moves on (no second stack, no second chat)
 
   function showLabel(p) {
-    const total = tl.duration();
-    const t = p * total;
+    const t = p * tl.duration();
     labels.forEach((el, i) => {
-      const a = 1.6 + i * 1.5;
-      el.classList.toggle('on', t > a - .1 && t < a + 1.35);
+      const a = 1.6 + i * 1.5, lastOne = i === labels.length - 1;
+      el.classList.toggle('on', t > a - .35 && (lastOne || t < a + 1.05));             // switch at the middle of each camera move
     });
   }
 
-  let visible = true;
-  new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { rootMargin: '100px' }).observe(section);
+  let visible = false;
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { rootMargin: '200px' }).observe(section);
+  (function frame() { requestAnimationFrame(frame); if (visible) render(); })();
 
-  const t0 = performance.now();
-  function frame() {
-    requestAnimationFrame(frame);
-    if (!visible) return;
-    const t = (performance.now() - t0) / 1000;
-    P.x += (P.tx - P.x) * 0.05; P.y += (P.ty - P.y) * 0.05;
+  // one chat, not two: the stage shows only once it pins over the intro's last frame, and the intro scene steps aside
+  const stage = section.querySelector('.anat-stage'), scene = document.querySelector('#intro .scene');
+  const swap = on => { stage.style.opacity = on ? '' : '0'; if (scene) scene.style.opacity = on ? '0' : ''; };   // opacity: children can't override it
+  const hand = ScrollTrigger.create({ trigger: section, start: 'top top', onEnter: () => swap(true), onLeaveBack: () => swap(false),
+    onRefresh: self => swap(self.scroll() >= self.start - 1) });
 
-    outer.rotation.y = S.yaw + P.x * 0.18 * S.dist;
-    inner.rotation.x = S.pitch - P.y * 0.10 * S.dist;
-
-    layers.forEach((L, i) => {
-      const near = Math.max(0, 1 - Math.abs(i - S.u));
-      const front = Math.min(1, Math.max(0, (S.u - i) * 1.6));      // layers between the camera and the one on show
-      L.g.position.set(0, 0, -i * (0.002 + S.gap));
-      L.mat.opacity = (1 - 0.78 * S.dim * (1 - near)) * (1 - S.tour * front);
-      L.edge.material.opacity = (0.45 + 0.55 * near * S.tour) * S.edges * (1 - S.tour * front);
-      L.g.visible = L.mat.opacity > 0.01;
-    });
-
-    const base = fitDistance();
-    const narrow = innerWidth < 900;
-    const exploded = narrow ? base * 0.62 + 8 : base * 1.5 + 5;
-    const d = THREE.MathUtils.lerp(base, exploded, S.dist) * (1 - 0.92 * S.camY);
-    // aim at the real middle of the stack, and slide it right so the labels own the left side
-    scene.updateMatrixWorld();
-    const c = new THREE.Vector3(), v = new THREE.Vector3();
-    layers.forEach(L => c.add(L.g.getWorldPosition(v)));
-    c.multiplyScalar(1 / layers.length);
-    const side = narrow ? 0 : -W * 0.16 * S.dist;
-    const drop = (narrow ? -3.2 : 0) * S.dist;
-    camera.position.set(c.x + side + Math.sin(t * .15) * .25 * S.dist, c.y + drop + 3 * S.dist, c.z + d);
-    camera.lookAt(c.x + side, c.y + drop, c.z);
-    // camera tour: square-on views of each layer, blended with the overview
-    if (S.tour > 0.001) {
-      const vFov = THREE.MathUtils.degToRad(camera.fov);
-      const wFrac = narrow ? 0.96 : 0.62;
-      const dist = (W / wFrac) / (2 * Math.tan(vFov / 2) * camera.aspect);
-      const view = k => {
-        const L = layers[k], cW = L.g.getWorldPosition(new THREE.Vector3());
-        const q = L.g.getWorldQuaternion(new THREE.Quaternion());
-        const n = new THREE.Vector3(0, 0, 1).applyQuaternion(q), up = new THREE.Vector3(0, 1, 0).applyQuaternion(q);
-        const right = new THREE.Vector3(1, 0, 0).applyQuaternion(q);
-        const shift = narrow ? up.clone().multiplyScalar(-H * 0.18) : right.clone().multiplyScalar(-W * 0.2);
-        return { pos: cW.clone().add(n.multiplyScalar(dist)).add(shift), look: cW.clone().add(shift), up };
-      };
-      const i0 = Math.floor(S.u), i1 = Math.min(names.length - 1, i0 + 1), f = S.u - i0;
-      const A = view(i0), B = view(i1), e = f * f * (3 - 2 * f);
-      const pos = A.pos.clone().lerp(B.pos, e), look = A.look.clone().lerp(B.look, e), up = A.up.clone().lerp(B.up, e).normalize();
-      const k = S.tour * S.tour * (3 - 2 * S.tour);
-      const lookNow = new THREE.Vector3(c.x + side, c.y + drop, c.z).lerp(look, k);
-      camera.position.lerp(pos, k);
-      camera.up.set(0, 1, 0).lerp(up, k).normalize();
-      camera.lookAt(lookNow);
-      const cd = camera.position.distanceTo(lookNow);
-      scene.fog.near = Math.max(scene.fog.near, cd * 0.9); scene.fog.far = Math.max(scene.fog.far, cd * 2.2);
-    } else camera.up.set(0, 1, 0);
-
-    dust.material.opacity = (innerWidth < 900 ? 0 : 0.35) * S.dust;
-    dust.rotation.y = t * 0.01;
-    renderer.render(scene, camera);
-  }
-  frame();
+  measure(); render();
+  ScrollTrigger.addEventListener('refreshInit', () => { measure(); last = ''; });
   ScrollTrigger.refresh();
 }
