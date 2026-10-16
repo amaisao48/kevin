@@ -567,6 +567,13 @@ html:not(.js):not(.still) .fpane[hidden]{display:block}   /* reduced motion keep
 .care-amt .amt{font:850 36px/1 var(--sans);font-variation-settings:var(--wide)}
 @media (min-width:900px){.care{grid-template-columns:200px 1fr auto;align-items:center}.ptable{font-size:15.5px}}
 @media (max-width:899px){.ptable tbody th{width:118px;min-width:118px;font-size:13.5px}.ptable td{font-size:14px}.ptable{min-width:640px}}
+/* pricing groups (2026-10-16): what every plan gets, then how much of Anthony each plan gets */
+.ptable thead .tag{display:block;margin-top:2px;max-width:26ch;color:var(--ink);font-size:14px;line-height:1.35;font-weight:400}
+.ptable tr.grp th{position:static;width:auto;padding:34px 16px 12px;font:800 19px/1.1 var(--sans);font-variation-settings:'wdth' 112;color:var(--ink);border-bottom:1px solid var(--line2)}
+.pick{margin:28px auto 0;max-width:68ch;text-align:center;color:#D6D8DF;font-size:17px;line-height:1.5}
+.pm-tag{margin-top:2px;color:#C9CCD6;font-size:12.5px;line-height:1.3}
+.care-s{display:none}
+@media (max-width:899px){.js .pricing .pick{display:none}.js .pricing .care .care-s{display:block;grid-column:1/-1;grid-row:2;font-size:12.5px;line-height:1.3;color:#C9CCD6}}
 /* still and no-script: show everything, clip nothing */
 html:not(.js) .th-pick{display:none}
 html:not(.js) .th-screen{aspect-ratio:auto;border:0;background:none;display:grid;gap:14px}
@@ -705,7 +712,7 @@ html:not(.js) .th-stage,.still .th-stage{position:relative;height:auto}
   .pm-card .btn{width:100%;margin-top:8px;min-height:42px}
   .js .pricing .care{margin-top:8px;padding:8px 0;gap:2px 12px;grid-template-columns:1fr auto;align-items:center}
   .js .pricing .care h3{font-size:17px}
-  .js .pricing .care p:not(.care-amt){display:none}
+  .js .pricing .care p:not(.care-amt):not(.care-s){display:none}
   .js .pricing .care-amt{grid-column:2;grid-row:1}
   .js .pricing .care-amt .amt{font-size:22px}
   .js .pricing .fine{margin-top:6px;font-size:11px;line-height:1.35}
@@ -742,3 +749,12 @@ html:not(.js) .th-stage,.still .th-stage{position:relative;height:auto}
 .foot-link:hover{color:var(--gold)}
 /* until the motion code builds the pin, hold the opening at its real length so the lazy pictures further down wait */
 .js:not(.kv-ready) .stage{min-height:1400vh}
+/* until the opening is built (fonts can take a second on a phone), show only the first line: the 3D layers, HOME and the
+   chat stay hidden (Anthony 2026-10-16: tapping the link flashed a view of the brain) */
+.js:not(.kv-ready) .stack,.js:not(.kv-ready) .home,.js:not(.kv-ready) .gchat,.js:not(.kv-ready) .kv,.js:not(.kv-ready) .cursor,.js:not(.kv-ready) .stage-sample,.js:not(.kv-ready) .kv-fly{visibility:hidden}
+.js:not(.kv-ready) .b-q{opacity:1;transform:translateY(-50%)}
+/* departments, uniform (Anthony 2026-10-16: "none of those boxes are lined up"): one word size for all eight, at most two
+   lines, centred in one band; every card the same size in the same place, never over its word. JS sets the numbers. */
+.js .dp-word{text-align:center;white-space:nowrap}
+.js .dp-card{bottom:auto}
+.foot-word{letter-spacing:0;text-align:center}

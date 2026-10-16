@@ -7,6 +7,17 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
   /* ---------- works in every mode ---------- */
+  // the big KEVIN at the foot of the page: sized to the width of the screen, centred (2026-10-16: it ran off the right)
+  function fitFoot() {
+    var f = document.querySelector('.foot-word'); if (!f) return;
+    f.style.fontSize = '100px';
+    var r = document.createRange(); r.selectNodeContents(f);
+    var w = r.getBoundingClientRect().width, avail = f.clientWidth * 0.94;
+    if (w > 0) f.style.fontSize = (100 * avail / w) + 'px';
+  }
+  fitFoot();
+  if (document.fonts) document.fonts.ready.then(fitFoot);
+  window.addEventListener('resize', fitFoot);
   buildTicks();
   setupTabs();
   var brain = null, mini = null, liftMini = null;
@@ -14,7 +25,8 @@
     // layer 01 is the real brain recording: plays when the layer comes forward, holds its last frame after
     var bvid = $('#brainVid');
     if (bvid) {
-      bvid.poster = bvid.getAttribute(window.innerWidth < 760 ? 'data-pm' : 'data-pd');
+      // the poster is set in buildAll (cinema) or stillFrames (still page), never before the stage is built
+      if (html.classList.contains('still') || !window.gsap) bvid.poster = bvid.getAttribute(window.innerWidth < 760 ? 'data-pm' : 'data-pd');
       brain = { running: false, reveal: 0,
         start: function () { this.running = true; loadVids(); if (bvid.ended) bvid.currentTime = 0; var p = bvid.play(); if (p && p.catch) p.catch(function () {}); },
         stop: function () { this.running = false; bvid.pause(); }, resize: function () {}, draw: function () {} };
@@ -325,6 +337,21 @@
     $$('.b-bloat,.b-halluc,.b-forget').forEach(function (c) { c.style.top = Math.max(phone ? 60 : 70, gTop - c.offsetHeight - (phone ? 14 : 22)) + 'px'; });
     gsap.set('.b-q,.b-behind,.b-boomer', { yPercent: -50 });
     var tl = gsap.timeline({ defaults: { ease: 'none' } });
+    // a slower opening (Anthony 2026-10-16: "a tiny bit slower, like how it highlights all the words"): every story step
+    // before unit CUT plays S times slower, everything after moves later by SH. Baked in as each step is added (re-timing
+    // finished tweens afterwards broke scrolling back up).
+    var S = /[?&]nostretch/.test(location.search) ? 1 : 1.2, CUT = 10.0, SH = CUT * (S - 1);
+    function warpAt(pos) { return pos < CUT ? pos * S : pos + SH; }
+    function warpVars(v, pos) {
+      if (!(pos < CUT) || S === 1) return v;
+      var o = Object.assign({}, v);
+      o.duration = (o.duration === undefined ? 0.5 : o.duration) * S;
+      if (typeof o.stagger === 'number') o.stagger *= S;
+      return o;
+    }
+    var rawFromTo = tl.fromTo.bind(tl), rawTo = tl.to.bind(tl);
+    tl.fromTo = function (t, f, v, pos) { return rawFromTo(t, f, warpVars(v, pos), warpAt(pos)); };
+    tl.to = function (t, v, pos) { return rawTo(t, warpVars(v, pos), warpAt(pos)); };
     function WS(c) { return $$('.w', B(c)); }
     function beatIn(c, at, d) {
       d = d || 0.6; var ws = WS(c);
@@ -336,6 +363,9 @@
       tl.fromTo(ws, { opacity: 1 }, { opacity: 0, duration: 0.1, stagger: d * 0.8 / Math.max(1, ws.length), immediateRender: false }, at);
       tl.fromTo(B(c), { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.05, immediateRender: false }, at + d);
     }
+    // an instant switch that always plays back when scrolling up (tl.set steps did not undo reliably once the
+    // opening was stretched; Anthony 2026-10-16: "reverse the animations perfectly")
+    function flip(target, from, to, at) { tl.fromTo(target, from, Object.assign({ duration: 0.001, immediateRender: false }, to), at); }
     var ctxP = { v: 12 };
     function ctxTo(v, at, d) { tl.fromTo(ctxP, { v: ctxP.v }, { v: v, duration: d, onUpdate: function () { ctxEl.textContent = Math.round(ctxP.v) + '%'; ctxEl.parentNode.classList.toggle('hot', ctxP.v > 85); } }, at); ctxP.v = v; }
 
@@ -365,7 +395,7 @@
     // the chat window shatters into points, bottom rows first
     if (sky) tl.fromTo(sky.st, { shatter: 0 }, { shatter: 1, duration: 1.6 }, 7.2);
     tl.fromTo(gchat, { clipPath: 'inset(0% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.88 }, 7.2);
-    tl.set(gchat, { autoAlpha: 0 }, 8.1);
+    flip(gchat, { autoAlpha: 1 }, { autoAlpha: 0 }, 8.1);
     beatOut('b-demo', 8.95, 0.25); beatIn('b-pc', 9.2, 0.55);
     beatOut('b-pc', 9.85, 0.25);
     // 2. KEVIN: the points fly together into the letters
@@ -427,8 +457,9 @@
     tl.fromTo(go, { scale: 1 }, { scale: 0.94, duration: 0.08 }, 18.62);
     tl.fromTo(cursor, { scale: 1 }, { scale: 0.86, duration: 0.08 }, 18.62);
     // HOME is gone at once, like the real app; the chat is underneath
-    tl.set([home, cursor], { autoAlpha: 0 }, 18.75);
-    tl.set(stack, { autoAlpha: 1 }, 18.75);
+    flip(home, { autoAlpha: 1 }, { autoAlpha: 0 }, 18.75);
+    flip(cursor, { autoAlpha: 1 }, { autoAlpha: 0 }, 18.75);
+    flip(stack, { autoAlpha: 0 }, { autoAlpha: 1 }, 18.75);
     tl.fromTo('#stageSample', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2 }, 18.75);
     tl.fromTo('.c2', { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.15 }, 18.95);
     tl.fromTo('.c3', { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.3 }, 19.4);
@@ -437,8 +468,8 @@
     tl.fromTo('.lib-diff .dl', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.1, stagger: 0.08 }, 20.2);
     tl.fromTo('.c6', { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.3 }, 20.85);
     var stEl = $('#libStatus');
-    tl.call(function () { stEl.textContent = 'step 3 · writing the quote'; }, null, 19.0);
-    tl.fromTo({}, {}, { duration: 0.01, onComplete: function () { stEl.textContent = '✓ draft ready · waiting for Mike'; }, onReverseComplete: function () { stEl.textContent = 'step 3 · writing the quote'; } }, 20.9);
+    var stAt = { v: 0 };   // the status line follows the playhead both ways
+    tl.fromTo(stAt, { v: 0 }, { v: 1, duration: 0.001, immediateRender: false, onUpdate: function () { stEl.textContent = stAt.v >= 1 ? '✓ draft ready · waiting for Mike' : 'step 3 · writing the quote'; } }, 20.9);
     // 4. the stack: the chat tilts back and the layers come out from behind it
     var T = 21.4;
     order.forEach(function (el, i) {
@@ -454,7 +485,7 @@
     var F = T + 1.3, step = 1.2;
     order.forEach(function (el, i) {
       var at = F + i * step;
-      tl.set(el, { zIndex: 10 }, at);
+      flip(el, { zIndex: 5 - i }, { zIndex: 10 }, at);
       tl.fromTo(el, slot(el, i), Object.assign({ duration: 0.6, ease: 'power3.inOut' }, focus(el)), at);
       tl.fromTo($$('.cap')[i], { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.35 }, at + 0.3);
       if (i === 0) tl.fromTo(order.slice(1), { autoAlpha: 1 }, { autoAlpha: DIM, duration: 0.3 }, at);
@@ -463,23 +494,16 @@
       tl.fromTo(el, { autoAlpha: 1 }, { autoAlpha: DIM, duration: 0.3 }, at + step - 0.05);
       tl.fromTo($$('.cap')[i], { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -10, duration: 0.25 }, at + step - 0.05);
       tl.fromTo(el, focus(el), Object.assign({ duration: 0.55, ease: 'power3.inOut' }, slot(el, i)), at + step - 0.05);
-      tl.set(el, { zIndex: 5 - i }, at + step + 0.5);
+      flip(el, { zIndex: 10 }, { zIndex: 5 - i }, at + step + 0.5);
     });
     var E = F + 5 * step;
     var total = E + 0.2;
     tl.to({}, { duration: 0.01 }, total);
     // the slow assembly (2026-10-15): everything from the solid letters on moves later by D
     var D = 0.5;
-    tl.shiftChildren(D, false, 11.4);
-    T += D; F += D; E += D; total += D;
-    // a slower opening (Anthony 2026-10-16: "a tiny bit slower, like how it highlights all the words"): every story step
-    // before unit 10 stretches by S, everything after moves later by SH
-    var S = 1.2, CUT = 10.0, SH = CUT * (S - 1);
-    tl.getChildren(false, true, true).forEach(function (c) {
-      var s0 = c.startTime();
-      if (s0 < CUT) { c.startTime(s0 * S); c.timeScale(c.timeScale() / S); } else c.startTime(s0 + SH);
-    });
-    T += SH; F += SH; E += SH; total += SH;
+    tl.shiftChildren(D, false, 11.4 + SH);
+    tl.fromTo = rawFromTo; tl.to = rawTo;
+    T += D + SH; F += D + SH; E += D + SH; total += D + SH;
 
     UNIT = Math.round(H * (phone ? 0.42 : 0.45));
     var clickAt = 18.75 + D + SH;
@@ -611,6 +635,7 @@
     rows.forEach(function (r) {
       var cells = $$('td', r).map(function (c) { return { t: c.textContent.trim(), no: c.classList.contains('no') }; });
       var label = $('th', r).textContent.trim();
+      if (r.classList.contains('grp')) return;
       if (cells.every(function (c) { return c.t === 'Included'; })) same.push(label); else diff.push({ label: label, cells: cells });
     });
     var si = diff.findIndex(function (d) { return d.label === 'Skills I build'; }), ri = diff.findIndex(function (d) { return d.label === 'Robots I build'; });
@@ -635,9 +660,10 @@
     function show(i) {
       $$('button', tabs).forEach(function (b, j) { b.setAttribute('aria-selected', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
       var h = heads[i], btn = $('.btn', h);
-      card.innerHTML = '<p class="pm-when">' + $('.when', h).textContent + '</p><ul class="pm-rows">' +
+      var tag = $('.tag', h);
+      card.innerHTML = '<p class="pm-when">' + $('.when', h).textContent + '</p>' + (tag ? '<p class="pm-tag">' + tag.textContent + '</p>' : '') + '<ul class="pm-rows">' +
         diff.map(function (d) { var c = d.cells[i]; return '<li><span>' + d.label + '</span><b' + (c.no ? ' class="no"' : '') + '>' + c.t + '</b></li>'; }).join('') +
-        '</ul><p class="pm-all">Every plan also gets the interview, the brain and the app, hooks and locks, the walkthrough video, and a KEVIN that explains and fixes itself.</p>' +
+        '</ul><p class="pm-all">Every plan also gets the app, brain, agents, software connections, hooks and locks, and every file.</p>' +
         '<a class="btn ' + (i === 1 ? 'btn-gold' : 'btn-line') + '" href="' + btn.getAttribute('href') + '">' + btn.textContent + '</a>';
     }
     box.appendChild(tabs); box.appendChild(card); box.hidden = false; show(1);
@@ -710,8 +736,40 @@
   }
 
   /* =================== DEPARTMENTS =================== */
+  function layoutDepts() {
+    var pin = $('.dp-pin'), dps = $$('.dp'), words = $$('.dp-word'), cards = $$('.dp-card'), idxEl = $('#dpIndex');
+    var W = pin.clientWidth, H = pin.clientHeight, wide = W >= 900;
+    var pad = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pad')) || 20;
+    var aL = wide ? pad + 220 : pad, aR = W - pad, aW = aR - aL;
+    gsap.set(dps, { autoAlpha: 1 });   // measure with everything laid out (the timeline sets the real states after)
+    // the cards: one width, one height (the tallest), one place
+    var cw = wide ? Math.min(760, aW) : aW;
+    cards.forEach(function (c) { c.style.left = (aL + (aW - cw) / 2) + 'px'; c.style.right = 'auto'; c.style.width = cw + 'px'; c.style.minHeight = ''; c.style.top = '0px'; });
+    var ch = 0; cards.forEach(function (c) { ch = Math.max(ch, c.offsetHeight); });
+    var cTop = H - ch - (wide ? Math.max(40, H * 0.08) : Math.max(20, H * 0.035));
+    cards.forEach(function (c) { c.style.minHeight = ch + 'px'; c.style.top = cTop + 'px'; });
+    // the words: one size for all, so the longest line fits the width and two lines fit the band above the card
+    var ir = idxEl.getBoundingClientRect(), pr = pin.getBoundingClientRect();
+    var bandTop = wide ? Math.max(pr.top, ($('.dp-head').getBoundingClientRect().bottom)) - pr.top + 24 : ir.bottom - pr.top + 18;
+    var bandBot = cTop - (wide ? 28 : 18), probe = 100, widest = 0;
+    words.forEach(function (w) {
+      w.style.fontSize = probe + 'px'; w.style.left = '0px'; w.style.right = 'auto'; w.style.width = 'auto'; w.style.top = '0px';
+      w.innerHTML.split(/<br\s*\/?>/i).forEach(function (line) {
+        var sp = document.createElement('span'); sp.innerHTML = line; sp.style.whiteSpace = 'nowrap'; w.innerHTML = w.innerHTML;
+        w.appendChild(sp); sp.style.display = 'inline-block'; widest = Math.max(widest, sp.getBoundingClientRect().width); w.removeChild(sp);
+      });
+    });
+    var fs = Math.min(probe * aW * 0.96 / Math.max(1, widest), (bandBot - bandTop) / (2 * 0.86), wide ? 200 : 120);
+    words.forEach(function (w) {
+      w.style.fontSize = fs + 'px'; w.style.left = aL + 'px'; w.style.width = aW + 'px';
+      // every word's block sits centred in the same band (one-line words in the middle of it too)
+      w.style.top = (bandTop + (bandBot - bandTop - w.offsetHeight) / 2) + 'px';
+    });
+  }
+
   function buildDepts() {
     var sec = $('#departments'), dps = $$('.dp', sec), idx = $$('#dpIndex li');
+    layoutDepts();
     gsap.set(dps, { autoAlpha: 0 });
     var tl = gsap.timeline({ defaults: { ease: 'none' } }), t = 0;
     dps.forEach(function (d, i) {

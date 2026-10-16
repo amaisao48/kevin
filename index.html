@@ -27,6 +27,8 @@
     var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (/[?&]still\b/.test(location.search)) rm = true;
     document.documentElement.className = rm ? 'still' : 'js';
+    // the page always opens on its first line: no restored scroll position halfway into the 3D scene (2026-10-16)
+    if (!rm && 'scrollRestoration' in history && !location.hash) { history.scrollRestoration = 'manual'; window.scrollTo(0, 0); }
   })();
 </script>
 </head>
@@ -269,7 +271,7 @@
   <ul class="facts">
     <li><b>Any model</b><span>Plug in as many as you want</span></li>
     <li><b>Persistent memory</b><span>Corrections saved as lessons</span></li>
-    <li><b>A team of agents</b><span>Set up with you on Full and Partner</span></li>
+    <li><b>A team of agents</b><span>Set up with you on every plan</span></li>
     <li><b>Controls your PC</b><span>Files, browser, scheduled jobs</span></li>
     <li><b>Hooks and locks</b><span>Customer messages wait for you</span></li>
   </ul>
@@ -425,10 +427,10 @@
       <li>Trading desk</li><li>Lead engine</li><li>Web studio</li><li>Video and images</li><li>Sales</li><li>Office</li><li>Research</li><li>Voice</li>
     </ol>
     <div class="dp-list">
-      <article class="dp" data-i="0"><p class="dp-word" aria-hidden="true">TRADING DESK</p><div class="dp-card"><h3>Trading desk <span class="tagq">Paper first</span></h3><p>It pulls market data, backtests a strategy on past prices, then paper trades it with fake money and grades it every day. Real money moves only on your yes, in your own broker account.</p><p class="dp-sk">market-data &middot; backtest &middot; paper-trader &middot; risk-limits</p><svg class="dp-chart" viewBox="0 0 300 90" aria-hidden="true"><path class="pl" d="M0 80 L20 76 L34 78 L52 70 L66 72 L84 63 L98 66 L116 58 L132 61 L150 52 L166 55 L182 46 L200 49 L216 40 L232 43 L250 33 L266 36 L284 24 L300 18"/></svg><p class="dp-note">Sample backtest line, paper money.</p></div></article>
-      <article class="dp" data-i="1"><p class="dp-word" aria-hidden="true">LEAD ENGINE</p><div class="dp-card"><h3>Lead engine <span class="tagq">Held for you</span></h3><p>It turns public lists, permits, bid boards and maps into one scored master list with owner contacts, then works it with outreach you approve.</p><p class="dp-sk">list-builder &middot; lead-scoring &middot; owner-match &middot; outreach</p></div></article>
-      <article class="dp" data-i="2"><p class="dp-word" aria-hidden="true">WEB STUDIO</p><div class="dp-card"><h3>Web studio <span class="tagq">Built here</span></h3><p>It designs, codes and publishes websites, landing pages and small web apps. This page came out of one.</p><p class="dp-sk">design-stack &middot; web-design &middot; publish &middot; page-check</p></div></article>
-      <article class="dp" data-i="3"><p class="dp-word" aria-hidden="true">VIDEO AND IMAGES</p><div class="dp-card"><h3>Video and images <span class="tagq">Held for you</span></h3><p>It cuts long videos into captioned clips, edits reels and makes product photos and ad images.</p><p class="dp-sk">clip-finder &middot; captions &middot; reel-edit &middot; image-gen</p></div></article>
+      <article class="dp" data-i="0"><p class="dp-word" aria-hidden="true">TRADING<br>DESK</p><div class="dp-card"><h3>Trading desk <span class="tagq">Paper first</span></h3><p>It pulls market data, backtests a strategy on past prices, then paper trades it with fake money and grades it every day. Real money moves only on your yes, in your own broker account.</p><p class="dp-sk">market-data &middot; backtest &middot; paper-trader &middot; risk-limits</p><svg class="dp-chart" viewBox="0 0 300 90" aria-hidden="true"><path class="pl" d="M0 80 L20 76 L34 78 L52 70 L66 72 L84 63 L98 66 L116 58 L132 61 L150 52 L166 55 L182 46 L200 49 L216 40 L232 43 L250 33 L266 36 L284 24 L300 18"/></svg><p class="dp-note">Sample backtest line, paper money.</p></div></article>
+      <article class="dp" data-i="1"><p class="dp-word" aria-hidden="true">LEAD<br>ENGINE</p><div class="dp-card"><h3>Lead engine <span class="tagq">Held for you</span></h3><p>It turns public lists, permits, bid boards and maps into one scored master list with owner contacts, then works it with outreach you approve.</p><p class="dp-sk">list-builder &middot; lead-scoring &middot; owner-match &middot; outreach</p></div></article>
+      <article class="dp" data-i="2"><p class="dp-word" aria-hidden="true">WEB<br>STUDIO</p><div class="dp-card"><h3>Web studio <span class="tagq">Built here</span></h3><p>It designs, codes and publishes websites, landing pages and small web apps. This page came out of one.</p><p class="dp-sk">design-stack &middot; web-design &middot; publish &middot; page-check</p></div></article>
+      <article class="dp" data-i="3"><p class="dp-word" aria-hidden="true">VIDEO AND<br>IMAGES</p><div class="dp-card"><h3>Video and images <span class="tagq">Held for you</span></h3><p>It cuts long videos into captioned clips, edits reels and makes product photos and ad images.</p><p class="dp-sk">clip-finder &middot; captions &middot; reel-edit &middot; image-gen</p></div></article>
       <article class="dp" data-i="4"><p class="dp-word" aria-hidden="true">SALES</p><div class="dp-card"><h3>Sales <span class="tagq">Held for you</span></h3><p>Quotes and proposals written from your price book, follow-ups until they answer, and a short summary of every deal.</p><p class="dp-sk">quote-from-notes &middot; proposal &middot; follow-up &middot; deal-summary</p></div></article>
       <article class="dp" data-i="5"><p class="dp-word" aria-hidden="true">OFFICE</p><div class="dp-card"><h3>Office <span class="tagq">Daily</span></h3><p>Invoices, payment reminders, the job schedule, the expense log and a morning brief waiting when you sit down.</p><p class="dp-sk">invoice-reminder &middot; job-schedule &middot; expense-log &middot; morning-brief</p></div></article>
       <article class="dp" data-i="6"><p class="dp-word" aria-hidden="true">RESEARCH</p><div class="dp-card"><h3>Research <span class="tagq">On request</span></h3><p>It takes apart tools, competitors and paid courses, then builds a working version that fits your setup.</p><p class="dp-sk">reverse-engineer &middot; watch-reel &middot; deep-research</p></div></article>
@@ -555,7 +557,7 @@ if tool.startswith("send_") and not approved(call):
 <!-- ============ Interview to handover ============ -->
 <section class="sec timeline" id="steps">
   <h2 class="t-xl">Interview to handover.</h2>
-  <p class="lede">Full build shown. Starter runs the same steps in about 2 weeks. On Partner, I stay on after handover.</p>
+  <p class="lede">Full build shown. Starter runs the same steps in about 2 weeks. On Partner, I stay on after handover and keep it current.</p>
   <ol class="tl">
     <li><p class="tl-w">Week 1</p><h3>Interview</h3><p>You talk through how the business runs. The AI listens for the work that eats your week.</p></li>
     <li><p class="tl-w">Week 1</p><h3>Blueprint</h3><p>Your shape, rules and first skills. You approve them before anything gets built.</p></li>
@@ -568,9 +570,9 @@ if tool.startswith("send_") and not approved(call):
 <!-- ============ Pricing ============ -->
 <section class="sec pricing" id="pricing">
   <h2 class="t-xl">Pricing.</h2>
-  <p class="lede">Every plan gets the whole program: a KEVIN built around your business that can take on any job on this page, explain and fix itself, and build more of itself as you go. The plan sets how much of it I build with you, and how long I stay.</p>
+  <p class="lede">Every plan gets the whole system: the KEVIN app, the brain, a team of agents and connections to the software you use, where it allows it. Any plan can take on any job on this page, and you can change it and build on it yourself. The plan sets how much of me you get: how much I build with you, and whether I stay on to keep it current.</p>
   <!-- PRICES: every price on the page lives ONLY in the four .amt spans in this section (Starter, Full, Partner, Care). Change them here. -->
-  <p class="lede-s">Every plan gets the whole program. The plan sets how much I build with you.</p>
+  <p class="lede-s">Every plan gets the whole system. The plan sets how much of me you get.</p>
   <div class="pmob" id="pmob" hidden></div>
   <p class="swipe-hint" aria-hidden="true">Swipe the table for Full and Partner</p>
   <div class="ptable-wrap" tabindex="0" aria-label="Plans compared, scrolls sideways on small screens">
@@ -578,34 +580,39 @@ if tool.startswith("send_") and not approved(call):
       <caption class="sr">Starter, Full and Partner compared</caption>
       <thead><tr>
         <th scope="col"><span class="sr">Feature</span></th>
-        <th scope="col"><span class="pn">Starter</span><span class="amt" data-plan="starter">$1,500</span><span class="when">One time, about 2 weeks</span><a class="btn btn-line" href="mailto:amaisao48@gmail.com?subject=KEVIN%20Starter">Book Starter</a></th>
-        <th scope="col"><span class="pn">Full</span><span class="amt" data-plan="full">$3,500</span><span class="when">One time, about 4 weeks</span><a class="btn btn-gold" href="mailto:amaisao48@gmail.com?subject=KEVIN%20Full">Book Full</a></th>
-        <th scope="col"><span class="pn">Partner</span><span class="amt" data-plan="partner">$2,500</span><span class="when">A month, 3 month minimum, build included</span><a class="btn btn-line" href="mailto:amaisao48@gmail.com?subject=KEVIN%20Partner">Book Partner</a></th>
+        <th scope="col"><span class="pn">Starter</span><span class="amt" data-plan="starter">$1,500</span><span class="when">One time, about 2 weeks</span><span class="tag">The whole system, set up small. You grow it with KEVIN.</span><a class="btn btn-line" href="mailto:amaisao48@gmail.com?subject=KEVIN%20Starter">Book Starter</a></th>
+        <th scope="col"><span class="pn">Full</span><span class="amt" data-plan="full">$3,500</span><span class="when">One time, about 4 weeks</span><span class="tag">Up to 4 departments built with you, plus training calls.</span><a class="btn btn-gold" href="mailto:amaisao48@gmail.com?subject=KEVIN%20Full">Book Full</a></th>
+        <th scope="col"><span class="pn">Partner</span><span class="amt" data-plan="partner">$2,500</span><span class="when">A month, 3 month minimum, build included</span><span class="tag">The jump start. I build all of it and keep it current.</span><a class="btn btn-line" href="mailto:amaisao48@gmail.com?subject=KEVIN%20Partner">Book Partner</a></th>
       </tr></thead>
       <tbody>
+        <tr class="grp"><th scope="colgroup" colspan="4">In every plan</th></tr>
         <tr><th scope="row">Interview and blueprint</th><td>Included</td><td>Included</td><td>Included</td></tr>
-        <tr><th scope="row">Brain, memory and the KEVIN app</th><td>Included</td><td>Included</td><td>Included</td></tr>
+        <tr><th scope="row">The KEVIN app, brain and memory</th><td>Included</td><td>Included</td><td>Included</td></tr>
+        <tr><th scope="row">A team of agents, set up with you</th><td>Included</td><td>Included</td><td>Included</td></tr>
+        <tr><th scope="row">Connected to your software, where it allows it</th><td>Included</td><td>Included</td><td>Included</td></tr>
+        <tr><th scope="row">Hooks and locks: customer messages wait for your yes</th><td>Included</td><td>Included</td><td>Included</td></tr>
         <tr><th scope="row">Ask KEVIN how anything works, or to fix itself</th><td>Included</td><td>Included</td><td>Included</td></tr>
-        <tr><th scope="row">Build more on your own: skills, robots, agents</th><td>Included</td><td>Included</td><td>Included</td></tr>
-        <tr><th scope="row">Hooks and locks</th><td>Included</td><td>Included</td><td>Included</td></tr>
+        <tr><th scope="row">Change anything, or build more skills, robots and agents yourself</th><td>Included</td><td>Included</td><td>Included</td></tr>
+        <tr><th scope="row">Walkthrough video, and you own every file</th><td>Included</td><td>Included</td><td>Included</td></tr>
+        <tr class="grp"><th scope="colgroup" colspan="4">How much of me you get</th></tr>
         <tr><th scope="row">Departments I set up with you</th><td>1 of your choice</td><td>Up to 4</td><td>Every one you name</td></tr>
         <tr><th scope="row">Skills I build</th><td>5</td><td>Up to 12</td><td>No cap</td></tr>
         <tr><th scope="row">Robots I build</th><td>2: brief and backup</td><td>Up to 6</td><td>No cap</td></tr>
-        <tr><th scope="row">Team of agents I set up</th><td class="no">Not included</td><td>Included</td><td>Included</td></tr>
-        <tr><th scope="row">Connected to your software</th><td class="no">Not included</td><td>Where they allow it, drafts only</td><td>Where they allow it, drafts only</td></tr>
         <tr><th scope="row">Dry run</th><td>3 days</td><td>7 days</td><td>Until it runs your way</td></tr>
         <tr><th scope="row">Live calls with me</th><td>Handover call</td><td>Handover and 2 training calls</td><td>Weekly</td></tr>
-        <tr><th scope="row">Walkthrough video</th><td>Included</td><td>Included</td><td>Included</td></tr>
         <tr><th scope="row">Help after handover</th><td>Fixes for 30 days</td><td>Fixes for 60 days</td><td>Unlimited requests, one at a time</td></tr>
+        <tr><th scope="row">New models, tools and research</th><td class="no">Yours to follow, or add care</td><td class="no">Yours to follow, or add care</td><td>I follow them and update yours while you stay</td></tr>
       </tbody>
     </table>
   </div>
+  <p class="pick">If you like to build, Starter gets you the full value: KEVIN builds the rest with you. Partner is the jump start. I build more of it for you, and while you stay on I keep it current, so you never have to research the next model or tool for your setup.</p>
   <div class="care">
     <h3>Care plan</h3>
-    <p>A monthly health check, one new skill a month, new models plugged in for you, and fixes. Cancel any month. Leaving Partner? You can keep care.</p>
+    <p>For Starter and Full: a monthly health check, one new skill a month, new models plugged in for you, and fixes. Cancel any month. Leaving Partner? You can keep care.</p>
+    <p class="care-s">Monthly health check, a new skill and fixes. Cancel any month.</p>
     <p class="care-amt"><span class="amt" data-plan="care">$200</span> a month</p>
   </div>
-  <p class="fine">A department outside your plan is still yours to build: you and KEVIN set it up, or you move up a plan. Your Claude or ChatGPT plan is separate and billed to you by them.</p>
+  <p class="fine">A department outside your plan is yours to build with KEVIN, or move up a plan. AI plans like Claude or ChatGPT, and any paid software, are billed to you by their makers.</p>
 </section>
 
 <!-- ============ Founder ============ -->
@@ -630,6 +637,7 @@ if tool.startswith("send_") and not approved(call):
     <details><summary>Can it talk?</summary><p>Mine answers to "Hey Kevin." Voice is a separate add-on once yours has run for 30 days.</p></details>
     <details><summary>What if something breaks?</summary><p>Fixes are free for 30 or 60 days, depending on your build, and for as long as you stay on Partner. After that, the care plan covers it.</p></details>
     <details><summary>What does unlimited mean on Partner?</summary><p>Send as many requests as you like. I work them one at a time, in the order you pick, until each one runs the way you want. After the first 3 months you can pause, cancel or drop to care any month.</p></details>
+    <details><summary>Do I need Partner to get the full value?</summary><p>No. Starter has the whole system, and KEVIN can build the rest with you, so if you like to build you can get all of it from Starter. Partner is the jump start: I build more of it with you, and while you stay on I follow the new models and tools and update yours. You never have to research any of it.</p></details>
   </div>
 </section>
 
