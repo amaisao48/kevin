@@ -758,3 +758,9 @@ html:not(.js) .th-stage,.still .th-stage{position:relative;height:auto}
 .js .dp-word{text-align:center;white-space:nowrap}
 .js .dp-card{bottom:auto}
 .foot-word{letter-spacing:0;text-align:center}
+/* short screens (a phone on its side): compact department cards so the card fits under the heading */
+.js .dp-short .dp-card{padding:12px 16px}
+.js .dp-short .dp-card h3{font-size:20px}
+.js .dp-short .dp-card>p{font-size:14px;line-height:1.4;margin-top:4px}
+.js .dp-short .dp-chart,.js .dp-short .dp-note{display:none}
+.js .dp-short .dp-index{font-size:12px}

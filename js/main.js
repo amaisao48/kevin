@@ -75,7 +75,8 @@
     clearTimeout(rT);
     rT = setTimeout(function () {
       var w = window.innerWidth, h = window.innerHeight;
-      if (Math.abs(w - lastW) < 2 && Math.abs(h - lastH) < 160) return;
+      // the pinned stage ignores small height changes (a phone's toolbar sliding); the departments re-measure on any
+      if (Math.abs(w - lastW) < 2 && Math.abs(h - lastH) < 160) { if (lastW) layoutDepts(); return; }
       var keep = stageST ? (window.scrollY - stageST.start) / Math.max(1, stageST.end - stageST.start) : 0;
       buildAll();
       if (stageST && keep > 0 && keep < 1) window.scrollTo(0, stageST.start + keep * (stageST.end - stageST.start));
@@ -551,6 +552,7 @@
   function buildScreens() {
     var sec = $('#screens'), sets = $$('.scr-set', sec), phone = window.innerWidth < 900;
     var sub = $('#scrSub'), cnt = $('#scrCount');
+    sub.textContent = sets[0].dataset.sub; cnt.textContent = sets[0].dataset.n;   // the same caption going down or coming back
     gsap.set(sets, { autoAlpha: 0, xPercent: -50, yPercent: -50, x: 0, y: 0 });
     gsap.set($$('.lift', sec), { autoAlpha: 0, y: 0, scale: 1 });
     var tl = gsap.timeline({ defaults: { ease: 'none' } }), t = 0, marks = [];
@@ -722,31 +724,36 @@
         h.innerHTML = esc(txt.slice(0, i)) + '<span class="dec-e">' + esc(edge) + '</span><span class="dec-r">' + esc(txt.slice(i + edge.length)) + '</span>';
       }
       paint(0);
+      // follows the scroll both ways (2026-10-16: "reverse the animations perfectly"), so scrolling up un-writes it
       others.push(ScrollTrigger.create({
-        trigger: h, start: 'top 85%', once: true,
-        onEnter: function () { var o = { n: 0 }; gsap.to(o, { n: txt.length, duration: 0.55, ease: 'power1.out', onUpdate: function () { paint(o.n); }, onComplete: function () { h.textContent = txt; } }); }
+        trigger: h, start: 'top 88%', end: 'top 66%', scrub: true,
+        onUpdate: function (self) { var p = self.progress; if (p >= 0.999) h.textContent = txt; else paint(p * txt.length); }
       }));
     });
     var tiles = $$('#wallGrid li');
-    gsap.set(tiles, { autoAlpha: 0 });
-    others.push(ScrollTrigger.create({
-      trigger: '#wallGrid', start: 'top 85%', once: true,
-      onEnter: function () { gsap.fromTo(tiles, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out', stagger: 0.03 }); }
-    }));
+    var wt = gsap.fromTo(tiles, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, ease: 'none', stagger: 0.06,
+      scrollTrigger: { trigger: '#wallGrid', start: 'top 88%', end: 'top 58%', scrub: true } });
+    others.push(wt.scrollTrigger);
   }
 
   /* =================== DEPARTMENTS =================== */
   function layoutDepts() {
     var pin = $('.dp-pin'), dps = $$('.dp'), words = $$('.dp-word'), cards = $$('.dp-card'), idxEl = $('#dpIndex');
-    var W = pin.clientWidth, H = pin.clientHeight, wide = W >= 900;
+    // the visible screen, not the pin's own box (a pinned scene keeps its old height when a phone toolbar slides in)
+    var W = pin.clientWidth, H = Math.min(pin.clientHeight, window.innerHeight), wide = W >= 900;
+    $('#departments').classList.toggle('dp-short', H < 560);   // a phone on its side: a compact card
     var pad = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pad')) || 20;
     var aL = wide ? pad + 220 : pad, aR = W - pad, aW = aR - aL;
-    gsap.set(dps, { autoAlpha: 1 });   // measure with everything laid out (the timeline sets the real states after)
+    // measure with everything laid out, then put each department back the way the timeline had it
+    var was = dps.map(function (d) { return [d.style.opacity, d.style.visibility]; });
+    gsap.set(dps, { autoAlpha: 1 });
     // the cards: one width, one height (the tallest), one place
     var cw = wide ? Math.min(760, aW) : aW;
     cards.forEach(function (c) { c.style.left = (aL + (aW - cw) / 2) + 'px'; c.style.right = 'auto'; c.style.width = cw + 'px'; c.style.minHeight = ''; c.style.top = '0px'; });
     var ch = 0; cards.forEach(function (c) { ch = Math.max(ch, c.offsetHeight); });
     var cTop = H - ch - (wide ? Math.max(40, H * 0.08) : Math.max(20, H * 0.035));
+    var ir0 = idxEl.getBoundingClientRect().bottom - pin.getBoundingClientRect().top;
+    if (cTop < ir0 + 10) cTop = ir0 + 10;   // short screens (a phone on its side): the card never climbs over the heading
     cards.forEach(function (c) { c.style.minHeight = ch + 'px'; c.style.top = cTop + 'px'; });
     // the words: one size for all, so the longest line fits the width and two lines fit the band above the card
     var ir = idxEl.getBoundingClientRect(), pr = pin.getBoundingClientRect();
@@ -760,11 +767,15 @@
       });
     });
     var fs = Math.min(probe * aW * 0.96 / Math.max(1, widest), (bandBot - bandTop) / (2 * 0.86), wide ? 200 : 120);
+    var showWord = fs >= 28;   // no room for the big word on a very short screen: the card and the index carry it
+    fs = Math.max(fs, 28);
     words.forEach(function (w) {
+      w.style.visibility = showWord ? '' : 'hidden';
       w.style.fontSize = fs + 'px'; w.style.left = aL + 'px'; w.style.width = aW + 'px';
       // every word's block sits centred in the same band (one-line words in the middle of it too)
       w.style.top = (bandTop + (bandBot - bandTop - w.offsetHeight) / 2) + 'px';
     });
+    dps.forEach(function (d, i) { d.style.opacity = was[i][0]; d.style.visibility = was[i][1]; });
   }
 
   function buildDepts() {
